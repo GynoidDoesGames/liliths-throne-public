@@ -92,6 +92,15 @@ public class RoomPlayer {
 					Main.game.getPlayer().calculateStatusEffects(0);
 					Main.game.getPlayer().cleanAllDirtySlots();
 					Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().cleanAllClothing());
+					
+					for(GameCharacter comp : Main.game.getPlayer().getCompanions()) {
+						comp.setHealth(Main.game.getPlayer().getAttributeValue(Attribute.HEALTH_MAXIMUM));
+						comp.setMana(Main.game.getPlayer().getAttributeValue(Attribute.MANA_MAXIMUM));
+						Main.game.getTextEndStringBuilder().append(comp.washAllOrifices(false));
+						comp.calculateStatusEffects(0);
+						comp.cleanAllDirtySlots();
+						Main.game.getTextEndStringBuilder().append(comp.cleanAllClothing());
+					}
 				}
 				@Override
 				public int getSecondsPassed() {
