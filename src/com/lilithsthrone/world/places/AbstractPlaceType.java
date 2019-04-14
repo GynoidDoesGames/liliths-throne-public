@@ -286,40 +286,46 @@ public class AbstractPlaceType {
 		return new ArrayList<>();
 	}
 
-	public static ArrayList<PlaceUpgrade> getAvailableLilayaRoomPlaceUpgrades(Set<PlaceUpgrade> upgrades) {
-		if(upgrades.contains(PlaceUpgrade.LILAYA_GUEST_ROOM)) {
-			return PlaceUpgrade.getGuestRoomUpgrades();
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM)) {
-			return PlaceUpgrade.getSlaveQuartersUpgradesSingle();
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
-			return PlaceUpgrade.getSlaveQuartersUpgradesDouble();
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
-			return PlaceUpgrade.getMilkingUpgrades();
-		}
-		
-		return PlaceUpgrade.getCoreRoomUpgrades();
-	}
-	
-	public String getLilayaRoomSVGString(Set<PlaceUpgrade> upgrades) {
-		if(upgrades.contains(PlaceUpgrade.LILAYA_GUEST_ROOM)) {
-			return getSVGOverride("dominion/lilayasHome/roomGuest", Colour.BASE_GREEN_LIGHT);
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM)) {
-			return getSVGOverride("dominion/lilayasHome/roomSlave", Colour.BASE_CRIMSON);
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
-			return getSVGOverride("dominion/lilayasHome/roomMilking", Colour.BASE_ORANGE);
-			
-		} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
-			return getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
-			
-		} else {
-			return SVGString;
-		}
-	}
+    public static ArrayList<PlaceUpgrade> getAvailableLilayaRoomPlaceUpgrades(Set<PlaceUpgrade> upgrades) {
+        if(upgrades.contains(PlaceUpgrade.LILAYA_GUEST_ROOM)) {
+            return PlaceUpgrade.getGuestRoomUpgrades();
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM)) {
+            return PlaceUpgrade.getSlaveQuartersUpgradesSingle();
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
+            return PlaceUpgrade.getSlaveQuartersUpgradesDouble();
+ 
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_CABIN)) {
+            return PlaceUpgrade.getSlaveQuartersUpgradesCabin();
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
+            return PlaceUpgrade.getMilkingUpgrades();
+        }
+       
+        return PlaceUpgrade.getCoreRoomUpgrades();
+    }
+   
+    public String getLilayaRoomSVGString(Set<PlaceUpgrade> upgrades) {
+        if(upgrades.contains(PlaceUpgrade.LILAYA_GUEST_ROOM)) {
+            return getSVGOverride("dominion/lilayasHome/roomGuest", Colour.BASE_GREEN_LIGHT);
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM)) {
+            return getSVGOverride("dominion/lilayasHome/roomSlave", Colour.BASE_CRIMSON);
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
+            return getSVGOverride("dominion/lilayasHome/roomMilking", Colour.BASE_ORANGE);
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
+            return getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
+           
+        } else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_CABIN)) {
+            return getSVGOverride("dominion/lilayasHome/roomSlaveCabin", Colour.BASE_PURPLE_DARK);
+           
+        } else {
+            return SVGString;
+        }
+    }
 
 	public String getVirginityLossDescription() {
 		return virginityLossDescription;

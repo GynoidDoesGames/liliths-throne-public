@@ -417,6 +417,157 @@ public enum PlaceUpgrade {
 		}
 	},
 	
+/**Cabin style room, the basic idea with this is that slaves are forced into tight quarters. Leading to further negative affection loss with
+*the player but leading to slight gains with their fellow slaves, stats are placeholders until tested.
+           *Cost
+            *Removal Cost
+            *Upkeep
+            *Capacity
+            *Affection
+            *Obedience
+            */
+ 
+    LILAYA_SLAVE_ROOM_CABIN(true,
+            Colour.BASE_PURPLE_DARK,
+            "Slave Dorm",
+            "Rose will prepare this room just like she would for any other guest, making it suitable for housing four of your slaves."
+                    + " While more cost-effective than giving each slave their own room, the occupants will no doubt be frustrated at having to share their personal space with other slaves in such tight quarters.",
+            "This room has been converted into a suitable place for housing four of your slaves.",
+            "You've paid to have this room converted in cabin style room with bunk beds so that it's suitable for housing four of your slaves."
+                    + " A pair of bunk beds, covered in a plain white duvets, sit against opposite walls."
+                    + " Beside each one, there's a simple double bedside cabinet, complete with arcane-powered lamp."
+                    + " Other than that, the only other pieces of furniture in here are a single wooden wardrobe and solitary chest of drawers.",
+            5000,
+            0,
+            150,
+            4,
+            -0.15f,
+            0,
+            null) {
+       
+        @Override
+        public String getRoomDescription(Cell c) {
+            GenericPlace place = c.getPlace();
+           
+           
+            if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_UPGRADE_BED_C)) {
+                return "You've paid to have this room converted so that it's suitable for housing four of your slaves."
+                            + " A pair of fitted bunk beds, covered in warm fluffy duvets, sit against opposite walls."
+                            + " On either side of it, there's a simple bedside cabinet, each complete with its own arcane-powered lamp."
+                            + " Other than those, the only other pieces of furniture in here are a single wooden wardrobe and a solitary chest of drawers.";
+               
+            } else if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOWNGRADE_BED_C)) {
+                return "You've paid to have this room converted so that it's suitable for housing four of your slaves."
+                        + " A row of uncomfortable hammocks, covered in thin blankets, is slung against one of the room's walls."
+                        + " Beside each one, there's a simple bedside cabinet, complete with arcane-powered lamp."
+                        + " Other than that, the only other pieces of furniture in here are a single wooden wardrobe and solitary chest of drawers.";
+       
+            }else {
+                return "You've paid to have this room converted so that it's suitable for housing four of your slaves."
+                    + " A pair of bunk beds, covered in a plain white duvets, sit against opposite walls."
+                    + " Beside each one, there's a simple bedside cabinet, complete with arcane-powered lamp."
+                    + " Other than that, the only other pieces of furniture in here are a single wooden wardrobe and solitary chest of drawers.";
+            }
+        }
+       
+        @Override
+        protected boolean isExtraConditionsMet(Cell cell) {
+            return (Main.game.getCharactersTreatingCellAsHome(cell).isEmpty()
+                    && !cell.getPlace().getPlaceUpgrades().contains(LILAYA_ARTHUR_ROOM));
+        }
+       
+        @Override
+        public void applyInstallationEffects(Cell c) {
+            GenericPlace place = c.getPlace();
+            if(place.getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM)) {
+                place.removePlaceUpgrade(c, LILAYA_SLAVE_ROOM);
+               
+            } else {
+                for(PlaceUpgrade upgrade : PlaceUpgrade.values()) {
+                    if(upgrade != LILAYA_SLAVE_ROOM_CABIN) {
+                        place.removePlaceUpgrade(c, upgrade);
+                }
+            }
+        }
+    }},
+    ////Need to insert something into the upgrade code just above, not sure what yet
+    ////Need to investigate adding passive affection gain with other slaves to these options
+    ////Affection gain with other slaves 0.020 per day, this would reflect slaves grouping together and talking/supporting each other?
+    ////Is this already a thing that happens if they share a room? - SV
+   
+    LILAYA_SLAVE_ROOM_DOWNGRADE_BED_C(false,
+            Colour.GENERIC_BAD,
+            "Hammocks",
+            "Install a row of hammocks along one wall in this room, complete with hard pillows, and thin blankets."
+                    + " These changes will leave no doubt in the occupant's mind that they're a slave.",
+            "A row of hammocks, complete with hard pillows, and thin blankets, have been installed in this room.",
+            "A row of hammocks, complete with hard pillows, and thin blankets, is slung against one side of the room."
+                    + " Providing this room's occupants with such an uncomfortable place to sleep will definitely reinforce the fact that they're a slave, but at the same time they're likely to bond with their fellow slaves...",
+            400,
+            200,
+            -10,
+            0,
+            -0.2f,
+            0.15f,
+            null) {
+       
+        @Override
+        protected boolean isExtraConditionsMet(Cell cell) {
+            return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM_UPGRADE_BED_C);
+        }
+ 
+        @Override
+        protected String getExtraConditionalAvailabilityDescription(Cell cell) {
+            if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM_UPGRADE_BED_C)) {
+                return "You'll need to remove the Fitted Bunk Beds before installing this.";
+            }
+            return "";
+        }
+    },
+       
+    LILAYA_SLAVE_ROOM_UPGRADE_BED_C(false,
+            Colour.GENERIC_GOOD,
+            "Fitted Bunk Beds",
+            "Install a pair of fitted bunk beds in this room, along with more comfortable mattresses, fluffy pillows, and a warm duvet."
+                    + " The occupants of this room are sure to appreciate these upgrades.",
+            "A pair of custom fitted bunk beds, complete with a comfortable mattress, fluffy pillows, and a warm duvet, has been installed in this room.",
+            "A pair of fitted bunk beds, complete with comfortable mattresses, fluffy pillows, and a warm duvet, sits against opposite sides of the room."
+                    + " Providing this room's occupants with such a measure of sleeping luxury will definitely get them to like you more, although not enough to offset the tight quarters...",
+            700,
+            250,
+            25,
+            0,
+            0.15f,
+            -0.1f,
+            null) {
+       
+        @Override
+        public String getRoomDescription(Cell c) {
+            GenericPlace place = c.getPlace();
+           
+            if(place.getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM_CABIN)) {
+                return "This room's pair of bunk beds, have been replaced with a pair of custom fitted bunk beds complete with comfortable mattresses, fluffy pillows, and a warm duvet."
+                        + " The slaves assigned to be this room's occupants will have to learn to live with the fact that they have limited personal space...";
+            } else {
+                return "A pair of fitted bunk beds, complete with comfortable mattresses, fluffy pillows, and a warm duvet, sits against one side of the room."
+                        + " Providing this room's occupant have the room to themselves will definitely get them to like you more, although it will also serve as a reminder of just what slaves can expect...";
+            }
+        }
+       
+        @Override
+        protected boolean isExtraConditionsMet(Cell cell) {
+            return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM_DOWNGRADE_BED_C);
+        }
+ 
+        @Override
+        protected String getExtraConditionalAvailabilityDescription(Cell cell) {
+            if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_SLAVE_ROOM_DOWNGRADE_BED_C)) {
+                return "You'll need to remove the Hammocks before installing this.";
+            }
+            return "";
+        }
+    },
+	
 	LILAYA_SLAVE_ROOM_OBEDIENCE_TRAINER(false,
 			Colour.GENERIC_ARCANE,
 			"Obedience Trainer",
@@ -590,7 +741,7 @@ public enum PlaceUpgrade {
 	;
 	
 	
-	private static ArrayList<PlaceUpgrade> coreRoomUpgrades, guestRoomUpgrades, slaveQuartersUpgradesSingle, slaveQuartersUpgradesDouble, getMilkingUpgrades;
+	private static ArrayList<PlaceUpgrade> coreRoomUpgrades, guestRoomUpgrades, slaveQuartersUpgradesSingle, slaveQuartersUpgradesDouble, slaveQuartersUpgradesCabin, getMilkingUpgrades;
 	
 	public static ArrayList<PlaceUpgrade> getCoreRoomUpgrades() {
 		if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.arthursRoomInstalled) || Main.game.getPlayer().isQuestProgressLessThan(QuestLine.MAIN, Quest.MAIN_1_J_ARTHURS_ROOM)) {
@@ -628,6 +779,15 @@ public enum PlaceUpgrade {
 		return slaveQuartersUpgradesDouble;
 	}
 	
+	public static ArrayList<PlaceUpgrade> getSlaveQuartersUpgradesCabin() {
+		if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.arthursRoomInstalled) || Main.game.getPlayer().isQuestProgressLessThan(QuestLine.MAIN, Quest.MAIN_1_J_ARTHURS_ROOM)) {
+			ArrayList<PlaceUpgrade> listArthurRemoved = new ArrayList<>(slaveQuartersUpgradesCabin);
+			listArthurRemoved.remove(PlaceUpgrade.LILAYA_ARTHUR_ROOM);
+			return listArthurRemoved;
+		}
+		return slaveQuartersUpgradesCabin;
+	}
+	
 	public static ArrayList<PlaceUpgrade> getMilkingUpgrades() {
 		return getMilkingUpgrades;
 	}
@@ -638,6 +798,7 @@ public enum PlaceUpgrade {
 				
 				PlaceUpgrade.LILAYA_SLAVE_ROOM,
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE,
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_CABIN,
 				
 				PlaceUpgrade.LILAYA_MILKING_ROOM,
 				
@@ -657,6 +818,7 @@ public enum PlaceUpgrade {
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_OBEDIENCE_TRAINER,
 
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE,
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_CABIN,
 				PlaceUpgrade.LILAYA_EMPTY_ROOM,
 				PlaceUpgrade.LILAYA_ARTHUR_ROOM);
 		
@@ -665,6 +827,18 @@ public enum PlaceUpgrade {
 				
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_UPGRADE_BED,
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_DOWNGRADE_BED,
+				
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_ARCANE_INSTRUMENTS,
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_OBEDIENCE_TRAINER,
+				
+				PlaceUpgrade.LILAYA_EMPTY_ROOM,
+				PlaceUpgrade.LILAYA_ARTHUR_ROOM);
+		
+		slaveQuartersUpgradesCabin = Util.newArrayListOfValues(
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_ROOM_SERVICE,
+				
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_UPGRADE_BED_C,
+				PlaceUpgrade.LILAYA_SLAVE_ROOM_DOWNGRADE_BED_C,
 				
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_ARCANE_INSTRUMENTS,
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_OBEDIENCE_TRAINER,
