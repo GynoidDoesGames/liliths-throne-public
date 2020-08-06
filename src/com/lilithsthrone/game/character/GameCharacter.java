@@ -6775,6 +6775,263 @@ public abstract class GameCharacter implements XMLSaving {
 		}
 	}
 
+	// Dialogue Modding:
+
+	/* Returns a single applicable sex dialogue in String form. */
+	public String getCustomDialogue(String... dlgTags) {
+		if(this.modSexDialogue.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDialogue.containsKey(dlgTag) && !this.modSexDialogue.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDialogue.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString()
+					                   .replaceAll("\\[npc.orifice\\]", "")
+					                   .replaceAll("\\[npc2.orifice\\]", ""));
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, s.getConditionalString(true)
+								                                 .replaceAll("npc\\.getOrifice\\(\\)", "\"\"")
+								                                 .replaceAll("npc2\\.getOrifice\\(\\)", "\"\""))) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", "")
+							                   .replaceAll("\\[npc2.orifice\\]", ""));
+						}
+					}
+				}
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+	
+	public String getCustomDialogue(GameCharacter target, String... dlgTags) {
+		if(this.modSexDialogue.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDialogue.containsKey(dlgTag) && !this.modSexDialogue.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDialogue.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString()
+					                   .replaceAll("\\[npc.orifice\\]", "")
+					                   .replaceAll("\\[npc2.orifice\\]", ""));
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, target, s.getConditionalString(true)
+								                                         .replaceAll("npc\\.getOrifice\\(\\)", "\"\"")
+								                                         .replaceAll("npc2\\.getOrifice\\(\\)", "\"\""))) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", "")
+							                   .replaceAll("\\[npc2.orifice\\]", ""));
+						}
+					}
+				}
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+
+	/* Returns a single applicable sex dialogue in String form. */
+	public String getCustomDialoguePenetrate(String condOrifice1, String condOrifice2,
+			String textOrifice1, String textOrifice2, String... dlgTags) {
+		if(this.modSexDialogue.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDialogue.containsKey(dlgTag) && !this.modSexDialogue.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDialogue.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", textOrifice1)
+							                   .replaceAll("\\[npc2.orifice\\]", textOrifice2));
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, s.getConditionalString(true)
+								                                 .replaceAll("npc\\.getOrifice\\(\\)", "\""+condOrifice1+"\"")
+								                                 .replaceAll("npc2\\.getOrifice\\(\\)", "\""+condOrifice2+"\""))) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", textOrifice1)
+							                   .replaceAll("\\[npc2.orifice\\]", textOrifice2));
+						}
+					}
+				}
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+	
+	public String getCustomDialoguePenetrate(GameCharacter target, String condOrifice1, String condOrifice2,
+			String textOrifice1, String textOrifice2, String... dlgTags) {
+		if(this.modSexDialogue.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+			
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDialogue.containsKey(dlgTag) && !this.modSexDialogue.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDialogue.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", textOrifice1)
+							                   .replaceAll("\\[npc2.orifice\\]", textOrifice2));
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, target, s.getConditionalString(true)
+								                                         .replaceAll("npc\\.getOrifice\\(\\)", "\""+condOrifice1+"\"")
+								                                         .replaceAll("npc2\\.getOrifice\\(\\)", "\""+condOrifice2+"\""))) {
+							randomStrings.add(s.getTextString()
+							                   .replaceAll("\\[npc.orifice\\]", textOrifice1)
+							                   .replaceAll("\\[npc2.orifice\\]", textOrifice2));
+						}
+					}
+				}
+
+
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+	
+	/* Returns the entire list. */
+	public List<ConditionalTextMod> getCustomDialogueList(String dlgTag) {
+		if(this.modSexDialogue.isEmpty() || !this.modSexDialogue.containsKey(dlgTag)) {
+			return null;
+		} else if(this.modSexDialogue.get(dlgTag).isEmpty()) {
+			return null;
+		} else {
+			return this.modSexDialogue.get(dlgTag);
+		}
+	}
+	
+	/* Returns the entire map. */
+	public Map<String, List<ConditionalTextMod>> getCustomDialogueMap() {
+		return this.modSexDialogue;
+	}
+	
+	public void addCustomDialogueTag(String dlgTag) {
+		this.modSexDialogue.put(dlgTag, new ArrayList<ConditionalTextMod>());
+	}
+	
+	public void deleteCustomDialogue(String dlgTag) {
+		this.modSexDialogue.remove(dlgTag);
+	}
+	
+	public void emptyCustomDialogue(String dlgTag) {
+		this.modSexDialogue.clear();
+	}
+	
+	public void addCustomDialogue(String dlgTag, String conditional, String dialogue) {
+		if(this.modSexDialogue.isEmpty() || !this.modSexDialogue.containsKey(dlgTag)) {
+			this.addCustomDialogueTag(dlgTag);
+
+
+		}
+		this.modSexDialogue.get(dlgTag).add(new ConditionalTextMod(conditional, dialogue));
+	}
+
+	/* Returns a single applicable sex dialogue in String form. */
+	public String getCustomSexDescription(String... dlgTags) {
+		if(this.modSexDescription.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDescription.containsKey(dlgTag) && !this.modSexDescription.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDescription.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString());
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, s.getConditionalString(true))) {
+							randomStrings.add(s.getTextString());
+						}
+					}
+				}
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+	
+	public String getCustomSexDescription(GameCharacter target, String... dlgTags) {
+		if(this.modSexDescription.isEmpty()) {
+			return null;
+		} else {
+			List<String> randomStrings = new ArrayList<>();
+
+
+			for(String dlgTag : dlgTags) {
+				if(this.modSexDescription.containsKey(dlgTag) && !this.modSexDescription.get(dlgTag).isEmpty()) {
+					for(ConditionalTextMod s : this.modSexDescription.get(dlgTag)) {
+						if(s!=null && !s.getTextString().isEmpty() && 
+								(s.getConditionalString().isEmpty() || s.getConditionalString()==null)) {
+							randomStrings.add(s.getTextString());
+						} else if(s!=null && !s.getTextString().isEmpty() && !s.getConditionalString().isEmpty() &&
+								UtilText.parseConditional(this, target, s.getConditionalString(true))) {
+							randomStrings.add(s.getTextString());
+						}
+					}
+				}
+			}
+			
+			if(randomStrings.isEmpty()) { return null; }
+			else { return randomStrings.get(Util.random.nextInt(randomStrings.size())); }
+		}
+	}
+	
+	/* Returns the entire list. */
+	public List<ConditionalTextMod> getCustomDescriptionList(String dlgTag) {
+		if(this.modSexDescription.isEmpty() || !this.modSexDescription.containsKey(dlgTag)) {
+			return null;
+		} else if(this.modSexDescription.get(dlgTag).isEmpty()) {
+			return null;
+		} else {
+			return this.modSexDescription.get(dlgTag);
+		}
+	}
+	
+	/* Returns the entire map. */
+	public Map<String, List<ConditionalTextMod>> getCustomDescriptionMap() {
+		return this.modSexDescription;
+	}
+	
+	public void addCustomDescriptionTag(String dlgTag) {
+		this.modSexDescription.put(dlgTag, new ArrayList<ConditionalTextMod>());
+	}
+	
+	public void deleteCustomDescription(String dlgTag) {
+		this.modSexDescription.remove(dlgTag);
+	}
+	
+	public void emptyCustomDescription(String dlgTag) {
+		this.modSexDescription.clear();
+	}
+	
+	public void addCustomDescription(String dlgTag, String conditional, String dialogue) {
+		if(this.modSexDescription.isEmpty() || !this.modSexDescription.containsKey(dlgTag)) {
+			this.addCustomDescriptionTag(dlgTag);
+		}
+		this.modSexDescription.get(dlgTag).add(new ConditionalTextMod(conditional, dialogue));
+
+
+	}
 	
 	// Stats:
 
