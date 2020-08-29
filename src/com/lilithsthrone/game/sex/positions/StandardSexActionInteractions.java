@@ -963,12 +963,18 @@ public class StandardSexActionInteractions {
 		@Override
 		public Value<SexSlot, Map<SexSlot, SexActionInteractions>> getSexActionInteractions(SexSlot performerSlot, SexSlot targetSlot) {
 			GameCharacter performer = getCharacter(performerSlot);
+			GameCharacter target = getCharacter(targetSlot);
 			
 			if(!performer.isTaur()) {
 				return new Value<>(performerSlot, Util.newHashMapOfValues(new Value<>(targetSlot,
 						new SexActionInteractions(
 						Util.mergeMaps(
-								SexActionPresets.kissing,
+								!target.isTaur()
+									?SexActionPresets.kissing
+									:null,
+								!target.isTaur()
+									?SexActionPresets.breastsToMouth
+									:null,
 								SexActionPresets.appendagesToAllAreas,
 								SexActionPresets.allAreasToAppendages,
 								SexActionPresets.thighsToPenis,
@@ -1114,7 +1120,8 @@ public class StandardSexActionInteractions {
 						Util.mergeMaps(
 								SexActionPresets.assToMouth,
 								SexActionPresets.groinToMouth,
-								SexActionPresets.appendagesToAllAreas),
+								SexActionPresets.appendagesToAllAreas,
+								SexActionPresets.feetToGroin),
 						Util.newArrayListOfValues(
 								OrgasmCumTarget.FACE,
 								OrgasmCumTarget.BREASTS,

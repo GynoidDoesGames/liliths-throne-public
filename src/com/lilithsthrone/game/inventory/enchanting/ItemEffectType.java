@@ -322,61 +322,61 @@ public class ItemEffectType {
 		}
 	};
 	
-	public static AbstractItemEffectType VIXENS_VIRILITY = new AbstractItemEffectType(Util.newArrayListOfValues(
-			Attribute.FERTILITY.getFormattedValue(50)+" for 24 hours",
-			Attribute.VIRILITY.getFormattedValue(50)+" for 24 hours",
-			"[style.boldBad(Removes status effect:)]",
-			"<i>'"+StatusEffect.PROMISCUITY_PILL.getName(null)+"'</i>"),
-			PresetColour.GENERIC_SEX) {
-		
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.removeStatusEffect(StatusEffect.PROMISCUITY_PILL);
-			target.addStatusEffect(StatusEffect.VIXENS_VIRILITY, 60*24*60);
-			return UtilText.parse(target,
-					"<p style='margin-bottom:0; padding-bottom:0;'>"
-						+ "The little pink pill easily slides down [npc.her] throat, and within moments [npc.she] [npc.verb(feel)] "
-						+ ( target.hasVagina()
-								? "a soothing, warm glow spreading out from [npc.her] ovaries into [npc.her] lower torso."
-									+ " [npc.Her] mind fogs over with an overwhelming desire to feel potent sperm spurting deep into [npc.her] "+(target.isVisiblyPregnant()?"pussy":"womb")
-									+", and before [npc.she] can stop it, a horny whimper escapes from between [npc.her] [npc.lips]."
-									+ (target.hasPenisIgnoreDildo()
-											?" At the same time, [npc.her] manhood begins to throb with need, and [npc.she] [npc.verb(feel)] "
-											:"") 
-								:"")
-						+ (target.hasPenisIgnoreDildo()
-								? "an overpowering desire to sink deep into a fertile female's cunt and fill her with [npc.cum+]."
-								: "")
-						+ (!target.hasPenisIgnoreDildo() && !target.hasVagina()
-								?"a desperate heat in [npc.her] genderless mound."
-								:"")
-					+"</p>"
-					+ "<p style='text-align:center; margin-top:0; padding-top:0;'>"
-						+ "[style.colourPink([npc.Name] [npc.is] now experiencing <i>'"+StatusEffect.VIXENS_VIRILITY.getName(target)+"'</i> for the next 24 hours!)]"
-					+ "</p>");
-		}
-	};
-	
-	public static AbstractItemEffectType PROMISCUITY_PILL = new AbstractItemEffectType(Util.newArrayListOfValues(
-			Attribute.FERTILITY.getFormattedValue(-100)+" for 24 hours",
-			Attribute.VIRILITY.getFormattedValue(-100)+" for 24 hours",
-			"[style.boldBad(Removes status effect:)]",
-			"<i>'"+StatusEffect.VIXENS_VIRILITY.getName(null)+"'</i>"),
-			PresetColour.GENERIC_SEX) {
-		
-		@Override
-		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.removeStatusEffect(StatusEffect.VIXENS_VIRILITY);
-			target.addStatusEffect(StatusEffect.PROMISCUITY_PILL, 60*24*60);
-			return UtilText.parse(target,
-					"<p>"
-						+ "The little blue pill easily slides down [npc.namePos] throat, and after only a few moments [npc.she] [npc.verb(feel)] a cool throbbing sensation taking root deep within [npc.her] loins."
-					+ "</p>"
-					+ "<p style='text-align:center; margin-top:0; padding-top:0;'>"
-						+ "[style.colourBlueLight([npc.Name] [npc.is] now experiencing <i>'"+StatusEffect.PROMISCUITY_PILL.getName(target)+"'</i> for the next 24 hours!)]"
-					+ "</p>");
-		}
-	};
+//	public static AbstractItemEffectType VIXENS_VIRILITY = new AbstractItemEffectType(Util.newArrayListOfValues(
+//			Attribute.FERTILITY.getFormattedValue(50)+" for 24 hours",
+//			Attribute.VIRILITY.getFormattedValue(50)+" for 24 hours",
+//			"[style.boldBad(Removes status effect:)]",
+//			"<i>'"+StatusEffect.PROMISCUITY_PILL.getName(null)+"'</i>"),
+//			PresetColour.GENERIC_SEX) {
+//		
+//		@Override
+//		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+//			target.removeStatusEffect(StatusEffect.PROMISCUITY_PILL);
+//			target.addStatusEffect(StatusEffect.VIXENS_VIRILITY, 60*24*60);
+//			return UtilText.parse(target,
+//					"<p style='margin-bottom:0; padding-bottom:0;'>"
+//						+ "The little pink pill easily slides down [npc.her] throat, and within moments [npc.she] [npc.verb(feel)] "
+//						+ ( target.hasVagina()
+//								? "a soothing, warm glow spreading out from [npc.her] ovaries into [npc.her] lower torso."
+//									+ " [npc.Her] mind fogs over with an overwhelming desire to feel potent sperm spurting deep into [npc.her] "+(target.isVisiblyPregnant()?"pussy":"womb")
+//									+", and before [npc.she] can stop it, a horny whimper escapes from between [npc.her] [npc.lips]."
+//									+ (target.hasPenisIgnoreDildo()
+//											?" At the same time, [npc.her] manhood begins to throb with need, and [npc.she] [npc.verb(feel)] "
+//											:"") 
+//								:"")
+//						+ (target.hasPenisIgnoreDildo()
+//								? "an overpowering desire to sink deep into a fertile female's cunt and fill her with [npc.cum+]."
+//								: "")
+//						+ (!target.hasPenisIgnoreDildo() && !target.hasVagina()
+//								?"a desperate heat in [npc.her] genderless mound."
+//								:"")
+//					+"</p>"
+//					+ "<p style='text-align:center; margin-top:0; padding-top:0;'>"
+//						+ "[style.colourPink([npc.Name] [npc.is] now experiencing <i>'"+StatusEffect.VIXENS_VIRILITY.getName(target)+"'</i> for the next 24 hours!)]"
+//					+ "</p>");
+//		}
+//	};
+//	
+//	public static AbstractItemEffectType PROMISCUITY_PILL = new AbstractItemEffectType(Util.newArrayListOfValues(
+//			Attribute.FERTILITY.getFormattedValue(-100)+" for 24 hours",
+//			Attribute.VIRILITY.getFormattedValue(-100)+" for 24 hours",
+//			"[style.boldBad(Removes status effect:)]",
+//			"<i>'"+StatusEffect.VIXENS_VIRILITY.getName(null)+"'</i>"),
+//			PresetColour.GENERIC_SEX) {
+//		
+//		@Override
+//		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
+//			target.removeStatusEffect(StatusEffect.VIXENS_VIRILITY);
+//			target.addStatusEffect(StatusEffect.PROMISCUITY_PILL, 60*24*60);
+//			return UtilText.parse(target,
+//					"<p>"
+//						+ "The little blue pill easily slides down [npc.namePos] throat, and after only a few moments [npc.she] [npc.verb(feel)] a cool throbbing sensation taking root deep within [npc.her] loins."
+//					+ "</p>"
+//					+ "<p style='text-align:center; margin-top:0; padding-top:0;'>"
+//						+ "[style.colourBlueLight([npc.Name] [npc.is] now experiencing <i>'"+StatusEffect.PROMISCUITY_PILL.getName(target)+"'</i> for the next 24 hours!)]"
+//					+ "</p>");
+//		}
+//	};
 	
 
 	public static AbstractItemEffectType MOO_MILKER = new AbstractItemEffectType(Util.newArrayListOfValues(
@@ -391,14 +391,14 @@ public class ItemEffectType {
 				return "<p>"
 							+ "It only takes a moment before the beaker is filled with "+ Units.fluid(milkPumped, Units.UnitType.LONG)+" of your [pc.milk]."
 						+ "</p>"
-						+ user.addItem(Main.game.getItemGen().generateFilledBreastPump(ItemType.MOO_MILKER_EMPTY.getColourPrimary(), target, target.getMilk(), milkPumped), false, true);
+						+ user.addItem(Main.game.getItemGen().generateFilledBreastPump(ItemType.MOO_MILKER_EMPTY.getColourShades().get(0), target, target.getMilk(), milkPumped), false, true);
 			
 			} else {
 				return UtilText.parse(target,
 						"<p>"
 							+ "It only takes a moment before the beaker is filled with "+Units.fluid(milkPumped, Units.UnitType.LONG)+" of [npc.her] [npc.milk]."
 						+ "</p>"
-						+ user.addItem(Main.game.getItemGen().generateFilledBreastPump(ItemType.MOO_MILKER_EMPTY.getColourPrimary(), target, target.getMilk(), milkPumped), false, true));
+						+ user.addItem(Main.game.getItemGen().generateFilledBreastPump(ItemType.MOO_MILKER_EMPTY.getColourShades().get(0), target, target.getMilk(), milkPumped), false, true));
 			}
 		}
 	};
@@ -1055,6 +1055,30 @@ public class ItemEffectType {
 				}
 			}
 			
+			// Remove possible fetish modifications based on user content settings:
+			if(!Main.game.isAnalContentEnabled()) {
+				fetishesToAdd.remove(Fetish.FETISH_ANAL_GIVING);
+				fetishesToAdd.remove(Fetish.FETISH_ANAL_RECEIVING);
+				fetishesToRemove.remove(Fetish.FETISH_ANAL_GIVING);
+				fetishesToRemove.remove(Fetish.FETISH_ANAL_RECEIVING);
+			}
+			if(!Main.game.isLactationContentEnabled()) {
+				fetishesToAdd.remove(Fetish.FETISH_LACTATION_OTHERS);
+				fetishesToAdd.remove(Fetish.FETISH_LACTATION_SELF);
+				fetishesToRemove.remove(Fetish.FETISH_LACTATION_OTHERS);
+				fetishesToRemove.remove(Fetish.FETISH_LACTATION_SELF);
+			}
+			if(!Main.game.isFootContentEnabled()) {
+				fetishesToAdd.remove(Fetish.FETISH_FOOT_GIVING);
+				fetishesToAdd.remove(Fetish.FETISH_FOOT_RECEIVING);
+				fetishesToRemove.remove(Fetish.FETISH_FOOT_GIVING);
+				fetishesToRemove.remove(Fetish.FETISH_FOOT_RECEIVING);
+			}
+			if(!Main.game.isIncestEnabled()) {
+				fetishesToAdd.remove(Fetish.FETISH_INCEST);
+				fetishesToRemove.remove(Fetish.FETISH_INCEST);
+			}
+
 			if((Math.random()>0.33f && !fetishesToAdd.isEmpty()) || fetishesToRemove.isEmpty()) {
 				Fetish f = fetishesToAdd.get(Util.random.nextInt(fetishesToAdd.size()));
 				target.addFetish(f);
@@ -1802,7 +1826,7 @@ public class ItemEffectType {
 		
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)]!";
 		}
 	};
@@ -1822,7 +1846,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_CAT_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldCat(cat-morphs)]!";
 		}
@@ -1843,7 +1867,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_COW_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldCow(cow-morphs)]!";
 		}
@@ -1864,7 +1888,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_SQUIRREL_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldSquirrel(squirrel-morphs)]!";
 		}
@@ -1885,7 +1909,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_RAT_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldRat(rat-morphs)]!";
 		}
@@ -1906,7 +1930,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_RABBIT_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldRabbit(rabbit-morphs)]!";
 		}
@@ -1927,7 +1951,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_BAT_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldBat(bat-morphs)]!";
 		}
@@ -1948,7 +1972,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_ALLIGATOR_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldAlligator(alligator-morphs)]!";
 		}
@@ -1969,7 +1993,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_DEMON, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldDemon(demons)]!";
 		}
@@ -1990,7 +2014,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_IMP, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldImp(imps)]!";
 		}
@@ -2011,7 +2035,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_DOG_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldDog(dog-morphs)]!";
 		}
@@ -2032,7 +2056,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HARPY, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHarpy(harpies)]!";
 		}
@@ -2053,7 +2077,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HORSE_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHorse(horse-morphs)]!";
 		}
@@ -2074,7 +2098,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_REINDEER_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldReindeer(reindeer-morphs)]!";
 		}
@@ -2095,7 +2119,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_HUMAN, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldHuman(humans)]!";
 		}
@@ -2116,7 +2140,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_WOLF_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldWolf(wolf-morphs)]!";
 		}
@@ -2137,7 +2161,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_FOX_MORPH, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldFox(fox-morphs)]!";
 		}
@@ -2158,7 +2182,7 @@ public class ItemEffectType {
 		}
 		@Override
 		public String applyEffect(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {
-			target.incrementEssenceCount(TFEssence.ARCANE, 1, false);
+			target.incrementEssenceCount(1, false);
 			target.addStatusEffect(StatusEffect.COMBAT_BONUS_SLIME, 60*4*60);
 			return "You have absorbed [style.boldGood(+1)] [style.boldArcane(Arcane essence)], and are now far more effective at fighting [style.boldSlime(slimes)]!";
 		}

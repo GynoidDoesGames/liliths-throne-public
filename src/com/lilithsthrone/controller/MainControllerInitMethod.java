@@ -130,7 +130,6 @@ import com.lilithsthrone.game.character.persona.SexualOrientationPreference;
 import com.lilithsthrone.game.character.race.FurryPreference;
 import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.character.race.SubspeciesPreference;
-import com.lilithsthrone.game.combat.Combat;
 import com.lilithsthrone.game.combat.DamageType;
 import com.lilithsthrone.game.combat.moves.CombatMove;
 import com.lilithsthrone.game.combat.spells.Spell;
@@ -176,7 +175,6 @@ import com.lilithsthrone.game.inventory.enchanting.AbstractItemEffectType;
 import com.lilithsthrone.game.inventory.enchanting.EnchantingUtils;
 import com.lilithsthrone.game.inventory.enchanting.ItemEffect;
 import com.lilithsthrone.game.inventory.enchanting.LoadedEnchantment;
-import com.lilithsthrone.game.inventory.enchanting.TFEssence;
 import com.lilithsthrone.game.inventory.enchanting.TFModifier;
 import com.lilithsthrone.game.inventory.enchanting.TFPotency;
 import com.lilithsthrone.game.inventory.item.AbstractItem;
@@ -267,7 +265,7 @@ public class MainControllerInitMethod {
 //		}
 		
 		if(Main.game.isInCombat()) {
-			for(GameCharacter combatant : Combat.getAllCombatants(true)) {
+			for(GameCharacter combatant : Main.combat.getAllCombatants(true)) {
 				for(DamageType dt : DamageType.values()) {
 					id = combatant.getId()+"_COMBAT_SHIELD_"+dt;
 					
@@ -930,22 +928,22 @@ public class MainControllerInitMethod {
 				}
 			}
 			
-			for(TFEssence essence : TFEssence.values()) {
-				if (((EventTarget) MainController.document.getElementById("ESSENCE_" + essence.hashCode())) != null) {
-					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mousemove", MainController.moveTooltipListener, false);
-					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mouseleave", MainController.hideTooltipListener, false);
-					
-					TooltipInventoryEventListener el2 = new TooltipInventoryEventListener().setEssence(essence);
-					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mouseenter", el2, false);
-				}
-				if (((EventTarget) MainController.document.getElementById("ESSENCE_COST_" + essence.hashCode())) != null) {
-					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mousemove", MainController.moveTooltipListener, false);
-					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mouseleave", MainController.hideTooltipListener, false);
-					
-					TooltipInventoryEventListener el2 = new TooltipInventoryEventListener().setEssence(essence);
-					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mouseenter", el2, false);
-				}
-			}
+//			for(TFEssence essence : TFEssence.values()) {
+//				if (((EventTarget) MainController.document.getElementById("ESSENCE_" + essence.hashCode())) != null) {
+//					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mousemove", MainController.moveTooltipListener, false);
+//					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mouseleave", MainController.hideTooltipListener, false);
+//					
+//					TooltipInventoryEventListener el2 = new TooltipInventoryEventListener().setEssence(essence);
+//					MainController.addEventListener(MainController.document, "ESSENCE_" + essence.hashCode(), "mouseenter", el2, false);
+//				}
+//				if (((EventTarget) MainController.document.getElementById("ESSENCE_COST_" + essence.hashCode())) != null) {
+//					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mousemove", MainController.moveTooltipListener, false);
+//					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mouseleave", MainController.hideTooltipListener, false);
+//					
+//					TooltipInventoryEventListener el2 = new TooltipInventoryEventListener().setEssence(essence);
+//					MainController.addEventListener(MainController.document, "ESSENCE_COST_" + essence.hashCode(), "mouseenter", el2, false);
+//				}
+//			}
 			
 	
 			// -------------------- Enchantments --------------------
@@ -5513,10 +5511,10 @@ public class MainControllerInitMethod {
 					id = "fetishUnlock" + f;
 					if (((EventTarget) MainController.document.getElementById(id)) != null) {
 						((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
-							if(Main.game.getPlayer().getEssenceCount(TFEssence.ARCANE)>=f.getCost() && f.getFetishesForAutomaticUnlock().isEmpty()) {
+							if(Main.game.getPlayer().getEssenceCount()>=f.getCost() && f.getFetishesForAutomaticUnlock().isEmpty()) {
 								if(!Main.game.getPlayer().hasFetish(f)) {
 									Main.game.getPlayer().addFetish(f);
-									Main.game.getPlayer().incrementEssenceCount(TFEssence.ARCANE, -f.getCost(), false);
+									Main.game.getPlayer().incrementEssenceCount(-f.getCost(), false);
 									Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 								}
 							}
@@ -5538,9 +5536,9 @@ public class MainControllerInitMethod {
 						id = f+"_"+desire;
 						if (((EventTarget) MainController.document.getElementById(id)) != null) {
 							((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
-								if(Main.game.getPlayer().getEssenceCount(TFEssence.ARCANE)>=FetishDesire.getCostToChange()) {
+								if(Main.game.getPlayer().getEssenceCount()>=FetishDesire.getCostToChange()) {
 									if(Main.game.getPlayer().getBaseFetishDesire(f)!=desire) {
-										Main.game.getPlayer().incrementEssenceCount(TFEssence.ARCANE, -FetishDesire.getCostToChange(), false);
+										Main.game.getPlayer().incrementEssenceCount(-FetishDesire.getCostToChange(), false);
 										Main.game.getPlayer().setFetishDesire(f, desire);
 										Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 									}
@@ -6180,6 +6178,14 @@ public class MainControllerInitMethod {
 					setAutosavePreference(id, i);
 				}
 			}
+
+			// bypass sex action options:
+			for(int i=0; i<3; i++) {
+				id = "BYPASS_SEX_ACTIONS_"+i;
+				if (((EventTarget) MainController.document.getElementById(id)) != null) {
+					setBypassSexActionsPreference(id, i);
+				}
+			}
 			
 			Map<String, PropertyValue> settingsMap = Util.newHashMapOfValues(
 					new Value<>("ENCHANTMENT_LIMITS", PropertyValue.enchantmentLimits),
@@ -6188,6 +6194,7 @@ public class MainControllerInitMethod {
 					new Value<>("THUMBNAIL", PropertyValue.thumbnail),
 					new Value<>("SILLY", PropertyValue.sillyMode),
 					new Value<>("WEATHER_INTERRUPTION", PropertyValue.weatherInterruptions),
+					new Value<>("AUTO_SEX_CLOTHING_STRIP", PropertyValue.autoSexStrip),
 					new Value<>("AUTO_SEX_CLOTHING_MANAGEMENT", PropertyValue.autoSexClothingManagement),
 					new Value<>("NON_CON", PropertyValue.nonConContent),
 					new Value<>("SADISTIC_SEX", PropertyValue.sadisticSexContent),
@@ -6219,7 +6226,6 @@ public class MainControllerInitMethod {
 					new Value<>("INFLATION_CONTENT", PropertyValue.inflationContent),
 					new Value<>("SPITTING_ENABLED", PropertyValue.spittingEnabled),
 					new Value<>("OPPORTUNISTIC_ATTACKERS", PropertyValue.opportunisticAttackers),
-					new Value<>("BYPASS_SEX_ACTIONS", PropertyValue.bypassSexActions),
 					new Value<>("SHARED_ENCYCLOPEDIA", PropertyValue.sharedEncyclopedia)
 					);
 			
@@ -7035,7 +7041,17 @@ public class MainControllerInitMethod {
 		if (MainController.document.getElementById(id) != null) {
 			((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
 				Main.getProperties().setValue(option, value);
-				if (action != null) action.run();
+				if(action != null) {
+					action.run();
+				}
+				if(option.isFetishRelated() && Main.game.isStarted()) {
+					Main.game.getPlayer().recalculateCombatMoves();
+					Main.game.getPlayer().calculateSpecialFetishes();
+					for(GameCharacter character : Main.game.getAllNPCs()) {
+						character.recalculateCombatMoves();
+						character.calculateSpecialFetishes();
+					}
+				}
 				Main.saveProperties();
 				Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
 			}, false);
@@ -7098,7 +7114,19 @@ public class MainControllerInitMethod {
 		TooltipInformationEventListener el = new TooltipInformationEventListener().setInformation(Properties.autoSaveLabels[i], Properties.autoSaveDescriptions[i]);
 		MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
 	}
-	
+
+	static void setBypassSexActionsPreference(String id, int i) {
+		((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e -> {
+			Main.getProperties().bypassSexActions=i;
+			Main.saveProperties();
+			Main.game.setContent(new Response("", "", Main.game.getCurrentDialogueNode()));
+		}, false);
+
+		MainController.addEventListener(MainController.document, id, "mousemove", MainController.moveTooltipListener, false);
+		MainController.addEventListener(MainController.document, id, "mouseleave", MainController.hideTooltipListener, false);
+		TooltipInformationEventListener el = new TooltipInformationEventListener().setInformation(Properties.bypassSexActionsLabels[i], Properties.getBypassSexActionsDescriptions[i]);
+		MainController.addEventListener(MainController.document, id, "mouseenter", el, false);
+	}
 	
 	
 	private static void fluidHandler(MilkingRoom room, FluidStored fluid) {

@@ -126,6 +126,7 @@ import com.lilithsthrone.game.character.persona.Relationship;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
+import com.lilithsthrone.game.character.race.AbstractRace;
 import com.lilithsthrone.game.character.race.AbstractRacialBody;
 import com.lilithsthrone.game.character.race.FurryPreference;
 import com.lilithsthrone.game.character.race.Race;
@@ -144,7 +145,6 @@ import com.lilithsthrone.game.inventory.SetBonus;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
-import com.lilithsthrone.game.inventory.enchanting.TFEssence;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeaponType;
@@ -159,6 +159,7 @@ import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.sexActions.baseActions.ToyVagina;
 import com.lilithsthrone.main.Main;
+import com.lilithsthrone.rendering.SVGImages;
 import com.lilithsthrone.utils.Units;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
@@ -205,7 +206,7 @@ public class UtilText {
 			new Value<>("behaviour", "behavior"),
 			new Value<>("candour", "candor"),
 			new Value<>("clamour", "clamor"),
-			new Value<>("colour(\\s|\\.|,|s|e|i)", "color$1"),
+			new Value<>("colour", "color"),
 			new Value<>("demeanour", "demeanor"),
 			new Value<>("endeavour", "endeavor"),
 			new Value<>("favourite", "favourite"),
@@ -658,7 +659,7 @@ public class UtilText {
 	
 	public static String formatAsEssencesUncoloured(int amount, String tag, boolean withOverlay) {
 		return "<div class='item-inline'>"
-					+ TFEssence.ARCANE.getSVGStringUncoloured() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_"+TFEssence.ARCANE.hashCode()+"'></div>":"")
+					+ SVGImages.SVG_IMAGE_PROVIDER.getEssenceUncoloured() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
 				+"</div>"
 				+ " <"+tag+" style='color:"+PresetColour.TEXT_GREY.toWebHexString()+";'>"+Units.number(amount)+"</"+tag+">";
 	}
@@ -666,7 +667,7 @@ public class UtilText {
 	
 	public static String formatAsEssences(int amount, String tag, boolean withOverlay) {
 		return "<div class='item-inline'>"
-					+ TFEssence.ARCANE.getSVGString() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_"+TFEssence.ARCANE.hashCode()+"'></div>":"")
+					+ SVGImages.SVG_IMAGE_PROVIDER.getEssence() + (withOverlay?"<div class='overlay no-pointer' id='ESSENCE_ICON'></div>":"")
 				+"</div>"
 				+ " <"+tag+" style='color:"+PresetColour.GENERIC_ARCANE.toWebHexString()+";'>"+Units.number(amount)+"</"+tag+">";
 	}
@@ -1250,14 +1251,9 @@ public class UtilText {
 			}
 
 			String result = resultBuilder.toString();
-			result = result.replaceAll("german", "German"); // This is needed as the subspecies 'german-shepherd-morph' needs to use a lowercase 'g' for generic name determiner detection.
 			
-			if(Main.game.isStarted() && Main.game.getPlayer().getHistory()==Occupation.TOURIST) {
-				for(Entry<String, String> entry : americanEnglishConversions.entrySet()) {
-					result = result.replaceAll(entry.getKey(), entry.getValue());
-					result = result.replaceAll(Util.capitaliseSentence(entry.getKey()), Util.capitaliseSentence(entry.getValue()));
-				}
-			}
+			//TODO This really should be somewhere else or handled differently...
+			result = result.replaceAll("german", "German"); // This is needed as the subspecies 'german-shepherd-morph' needs to use a lowercase 'g' for generic name determiner detection.
 			
 			return result;
 			
@@ -1276,7 +1272,15 @@ public class UtilText {
 		}
 		return input.substring(startingLocation, index).equals(stringToMatch);
 	}
-	
+
+	public static String convertToAmericanEnglish(String input) {
+		for(Entry<String, String> entry : americanEnglishConversions.entrySet()) {
+			input = input.replaceAll(entry.getKey()+"(\\s|\\.|,|s|e|i)", entry.getValue()+"$1");
+			input = input.replaceAll(Util.capitaliseSentence(entry.getKey())+"(\\s|\\.|,|s|e|i)", Util.capitaliseSentence(entry.getValue())+"$1");
+		}
+		
+		return input;
+	}
 
 	
 	public static List<ParserCommand> commandsList = new ArrayList<>();
@@ -3754,6 +3758,23 @@ public class UtilText {
 		});
 		
 		// Gender parsing:
+
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"guy"),
+				true,
+				true,
+				"",
+				"Returns the correct gender version of 'girl' or 'guy' for this character."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(character.isFeminine()) {
+					return "girl";
+				} else {
+					return "guy";
+				}
+			}
+		});
 		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
@@ -4697,6 +4718,22 @@ public class UtilText {
 				double time = Double.valueOf(arguments);
 				LocalDateTime now = Main.game.getDateNow();
 				return Units.time(LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), (int) time, Math.min(59, (int)((time%1)*60))));
+			}
+		});
+
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"fluid"),
+				true,
+				false,
+				"(ml to convert)",
+				"Returns the converted fluid measurement in the small singular length unit. If no argument is given, returns the small singular length unit.") {
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if (arguments == null || arguments.isEmpty()) {
+					return Main.getProperties().hasValue(PropertyValue.metricSizes) ? "mL" : "oz";
+				}
+				return Units.fluid(Double.valueOf(arguments), Units.ValueType.NUMERIC, Units.UnitType.SHORT);
 			}
 		});
 		
@@ -6859,7 +6896,7 @@ public class UtilText {
 				true,
 				true,
 				"",
-				"Returns the length of the character's penis, in the metric or imperial units as defined in user settings.",
+				"Returns a descriptor of the length of the character's penis.",
 				BodyPartType.PENIS){
 			@Override
 			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
@@ -8328,6 +8365,7 @@ public class UtilText {
 		// Core classes:
 		engine.put("game", Main.game);
 		engine.put("sex", Main.sex);
+		engine.put("combat", Main.combat);
 		engine.put("properties", Main.getProperties());
 		engine.put("RND", Util.random);
 		engine.put("itemGen", Main.game.getItemGen());
@@ -8367,8 +8405,8 @@ public class UtilText {
 		}
 		
 		// Bodies:
-		for(Race race : Race.values()) {
-			engine.put("RACE_"+race.toString(), race);
+		for(AbstractRace race : Race.getAllRaces()) {
+			engine.put("RACE_"+Race.getIdFromRace(race), race);
 		}
 		for(AbstractRacialBody racialBody : RacialBody.getAllRacialBodies()) {
 			engine.put("RACIAL_BODY_"+RacialBody.getIdFromRacialBody(racialBody), racialBody);

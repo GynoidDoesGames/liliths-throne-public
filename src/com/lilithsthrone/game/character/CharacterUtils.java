@@ -1357,7 +1357,9 @@ public class CharacterUtils {
 			}
 		}
 		
+		body.setSubspeciesOverride(null); // Set override to null so that it can be recalculated based on the final body type.
 		body.calculateRace(linkedCharacter);
+		
 		return body;
 	}
 	
@@ -1755,6 +1757,7 @@ public class CharacterUtils {
 					characterAdjectives.add("prude");
 					break;
 				case SELFISH:
+				case CYNICAL:
 					characterAdjectives.add("rude");
 					break;
 				case SHY:
@@ -1772,6 +1775,8 @@ public class CharacterUtils {
 				case MUTE:
 					break;
 				case INNOCENT:
+					break;
+				case NAIVE:
 					break;
 			}
 		}
@@ -2225,17 +2230,17 @@ public class CharacterUtils {
 		}
 		
 		if(character.getFetishDesire(Fetish.FETISH_PREGNANCY).isPositive() && !character.isPregnant() && character.hasVagina()) {
-			character.addItem(Main.game.getItemGen().generateItem(ItemType.VIXENS_VIRILITY), 2+Util.random.nextInt(4), false, false);
+			character.addItem(Main.game.getItemGen().generateItem("innoxia_pills_fertility"), 2+Util.random.nextInt(4), false, false);
 		}
 		if(character.getFetishDesire(Fetish.FETISH_IMPREGNATION).isPositive() && character.hasPenisIgnoreDildo()) {
-			character.addItem(Main.game.getItemGen().generateItem(ItemType.VIXENS_VIRILITY), 2+Util.random.nextInt(4), false, false);
+			character.addItem(Main.game.getItemGen().generateItem("innoxia_pills_fertility"), 2+Util.random.nextInt(4), false, false);
 		}
 
 		if(character.getFetishDesire(Fetish.FETISH_PREGNANCY).isNegative() && !character.isPregnant() && character.hasVagina()) {
-			character.addItem(Main.game.getItemGen().generateItem(ItemType.PROMISCUITY_PILL), 2+Util.random.nextInt(4), false, false);
+			character.addItem(Main.game.getItemGen().generateItem("innoxia_pills_sterility"), 2+Util.random.nextInt(4), false, false);
 		}
 		if(character.getFetishDesire(Fetish.FETISH_IMPREGNATION).isNegative() && character.hasPenisIgnoreDildo()) {
-			character.addItem(Main.game.getItemGen().generateItem(ItemType.PROMISCUITY_PILL), 2+Util.random.nextInt(4), false, false);
+			character.addItem(Main.game.getItemGen().generateItem("innoxia_pills_sterility"), 2+Util.random.nextInt(4), false, false);
 		}
 	}
 	
@@ -2302,7 +2307,7 @@ public class CharacterUtils {
 
 				character.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 				character.setName(Name.getRandomProstituteTriplet());
-				character.useItem(Main.game.getItemGen().generateItem(ItemType.PROMISCUITY_PILL),
+				character.useItem(Main.game.getItemGen().generateItem("innoxia_pills_sterility"),
 						character,
 						false);
 

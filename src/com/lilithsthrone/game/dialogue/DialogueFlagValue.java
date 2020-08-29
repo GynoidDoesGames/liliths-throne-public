@@ -81,6 +81,7 @@ public enum DialogueFlagValue {
 	nyanTalkedTo(true),
 	nyanComplimented(true),
 	nyanFlirtedWith(true),
+	nyanHeadPatted(true),
 	nyanKissed(true),
 	nyanMakeOut(true),
 	nyanSex(true),
@@ -157,6 +158,14 @@ public enum DialogueFlagValue {
 	slaverAlleyCompanionAcceptedDeal,
 	slaverAlleyTwoPartners,
 	slaverAlleySlavesFreed, // Reset every day at midnight (as part of stocks reset method)
+	
+	// Wes:
+	wesQuestLilayaHelp,
+
+	wesQuestTalked(true),
+	wesQuestTalkedAlt(true),
+	wesQuestFlirted(true),
+	wesQuestSex(true),
 	
 	// Helena (romance quest):
 	helenaCheapPaint,
@@ -250,6 +259,7 @@ public enum DialogueFlagValue {
 	playedPregnancyRouletteAsBreeder,
 	
 	eponaMurkOwnerIntroduced,
+	eponaMurkSeen,
 	eponaMurkSubmitted,
 	
 	// Nightlife:
@@ -317,6 +327,7 @@ public enum DialogueFlagValue {
 	ratWarrensEntranceGuardsFight,
 	ratWarrensSeenMilkers,
 	ratWarrensMilkersBackground,
+	ratWarrensMilkersFreeAttempt,
 	ratWarrensSilenceIntroduced,
 	
 	ratWarrensClearedLeft,
@@ -328,7 +339,6 @@ public enum DialogueFlagValue {
 	vengarThreatened,
 	vengarPersuaded,
 	vengarSeduced,
-	ratWarrensRaid,
 	ratWarrensUsedResonanceStone,
 
 	vengarCaptiveRoomCleaned(true),
@@ -347,7 +357,8 @@ public enum DialogueFlagValue {
 	ratWarrensCaptiveFuta,
 	ratWarrensCaptiveMasculine,
 	ratWarrensCaptiveSissy,
-	
+
+	murkCaptiveBlowjob,
 	murkMaster,
 	
 	ratWarrensCaptiveCalledOut,
@@ -356,7 +367,10 @@ public enum DialogueFlagValue {
 	ratWarrensCaptiveCompanionGivenBirth(true),
 	ratWarrensCaptiveOwnerSex(true),
 	ratWarrensCaptiveOwnerCompanionSex(true),
-	ratWarrensCaptiveDailyTransformed(true)
+	ratWarrensCaptiveDailyTransformed(true),
+
+	murkLectured(true),
+	murkSpanked(true),
 	;
 	
 	boolean dailyReset;

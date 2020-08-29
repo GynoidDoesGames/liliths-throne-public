@@ -4,6 +4,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -76,6 +77,8 @@ public class DominionSuccubusAttacker extends NPC {
 			addFetish(Fetish.FETISH_DEFLOWERING);
 			addFetish(Fetish.FETISH_DOMINANT);
 			CharacterUtils.addFetishes(this);
+
+			this.removePersonalityTrait(PersonalityTrait.PRUDE);
 
 			setSexualOrientation(SexualOrientation.AMBIPHILIC);
 			
@@ -331,7 +334,7 @@ public class DominionSuccubusAttacker extends NPC {
 						+ " [npc.speechNoEffects(It looks like you were saving yourself for me in the end! Which is a shame, really, because you're just another easy fuck to me.)]"
 					+ "</p>"
 					+ "<p>"
-						+ "You can't help but let out [pc.a_moan+] as you feel [npc.namePos] [npc.cock+] throbbing deep within your cunt, which causes [npc.her] to let out another mocking laugh and ask,"
+						+ "You can't help but let out [pc.a_moan+] as you feel [npc.namePos] [npc.cock+] throbbing deep within your cunt, which causes [npc.herHim] to let out another mocking laugh and ask,"
 						+ " [npc.speechNoEffects(What's that? You want me to do it again?!)]"
 					+ "</p>"
 					+ "<p>"

@@ -162,6 +162,34 @@ public class Perk {
 		}
 	};
 	
+	public static AbstractPerk JOB_NPC_ENFORCER_SWORD_SUPER = new AbstractPerk(20,
+			true,
+			"Enforcer: SWORD Superintendent",
+			PerkCategory.JOB,
+			"perks/jobs/npc_enforcer_superintendent",
+			PresetColour.CLOTHING_BLUE,
+			Util.newHashMapOfValues(
+					new Value<Attribute, Integer>(Attribute.MAJOR_PHYSIQUE, 20),
+					new Value<Attribute, Integer>(Attribute.MAJOR_ARCANE, 20),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_UNARMED, 30),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_MELEE_WEAPON, 30),
+					new Value<Attribute, Integer>(Attribute.DAMAGE_RANGED_WEAPON, 30)),
+			null) {
+		@Override
+		public String getDescription(GameCharacter owner) {
+			return UtilText.parse(owner, "[npc.Name] holds the rank of 'Superintendent' in the Enforcer's 'Special Weapons and Operations Response Department', and has received an extensive amount of combat training.");
+		}
+		@Override
+		public String getSVGString(GameCharacter owner) {
+			if(owner.isFeminine()) {
+				generateSVGImage(this.pathName, Util.newArrayListOfValues(PresetColour.CLOTHING_PINK));
+			} else {
+				generateSVGImage(this.pathName, Util.newArrayListOfValues(PresetColour.CLOTHING_BLUE));
+			}
+			return super.getSVGString(owner);
+		}
+	};
+	
 	public static AbstractPerk JOB_NPC_ENFORCER_SWORD_INSPECTOR = new AbstractPerk(20,
 			true,
 			"Enforcer: SWORD Inspector",
@@ -5475,11 +5503,12 @@ public class Perk {
 		for(Subspecies sub : Subspecies.values()) {
 			if(!resistancesAdded.contains(sub.getDamageMultiplier())) {
 				resistancesAdded.add(sub.getDamageMultiplier());
-				Subspecies subToUse = sub.getDamageMultiplier()==Subspecies.getMainSubspeciesOfRace(sub.getRace()).getDamageMultiplier()?Subspecies.getMainSubspeciesOfRace(sub.getRace()):sub;
+				boolean mainSubspecies = sub.getDamageMultiplier()==Subspecies.getMainSubspeciesOfRace(sub.getRace()).getDamageMultiplier();
+				Subspecies subToUse = mainSubspecies?Subspecies.getMainSubspeciesOfRace(sub.getRace()):sub;
 				
 				AbstractPerk racePerk = new AbstractPerk(20,
 						false,
-						Util.capitaliseSentence(subToUse.getName(null))+" knowledge",
+						Util.capitaliseSentence(mainSubspecies?sub.getRace().getName(false):subToUse.getName(null))+" knowledge",
 						PerkCategory.LUST,
 						null,
 						PresetColour.BASE_WHITE,
@@ -5488,7 +5517,7 @@ public class Perk {
 						null) {
 					@Override
 					public String getDescription(GameCharacter owner) {
-						return UtilText.parse(owner, "[npc.NameHasFull] advanced knowledge of "+subToUse.getNamePlural(null)+", and can therefore do increased damage when fighting them.");
+						return UtilText.parse(owner, "[npc.NameHasFull] advanced knowledge of "+(mainSubspecies?sub.getRace().getNamePlural(false):subToUse.getNamePlural(null))+", and can therefore do increased damage when fighting them.");
 					}
 					@Override
 					public String getSVGString(GameCharacter owner) {

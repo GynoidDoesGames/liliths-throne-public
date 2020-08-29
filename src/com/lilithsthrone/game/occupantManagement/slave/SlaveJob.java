@@ -514,44 +514,46 @@ public enum SlaveJob {
 		}
 		@Override
 		public void applyJobEndEffects(GameCharacter slave) {
-			Cell c = MilkingRoom.getMilkingCell(slave, true);
+//			Cell c = MilkingRoom.getMilkingCell(slave, true);
 //			System.out.println("1: "+slave.getName());
-			if(c!=null) {
+//			if(c!=null) {
 //				System.out.println("2: "+slave.getName());
-				MilkingRoom room = Main.game.getOccupancyUtil().getMilkingRoom(c.getType(), c.getLocation());
+				MilkingRoom room = Main.game.getOccupancyUtil().getMilkingRoom(slave.getWorldLocation(), slave.getLocation());
 				
-				AbstractClothing pump = slave.getClothingInSlot(InventorySlot.NIPPLE);
-				if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_breast_pumps"))) {
-					slave.forceUnequipClothingIntoVoid(slave, pump);
-				}
-				pump = slave.getClothingInSlot(InventorySlot.STOMACH);
-				if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_breast_pumps"))) {
-					slave.forceUnequipClothingIntoVoid(slave, pump);
-				}
-				pump = slave.getClothingInSlot(InventorySlot.PENIS);
-				if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_penis_pump"))) {
-					slave.forceUnequipClothingIntoVoid(slave, pump);
-				}
-				pump = slave.getClothingInSlot(InventorySlot.VAGINA);
-				if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_vagina_pump"))) {
-					slave.forceUnequipClothingIntoVoid(slave, pump);
-				}
-				
-				List<AbstractClothing> clothingRemoved = room.getClothingRemovedForMilking().get(slave.getId());
-				if(clothingRemoved!=null) {
-					for(AbstractClothing clothing : clothingRemoved) {
-						if(slave.getClothingCurrentlyEquipped().contains(clothing)) {
-							for(DisplacementType dt : new ArrayList<>(clothing.getDisplacedList())) {
-								slave.isAbleToBeReplaced(slave.getClothingInSlot(clothing.getSlotEquippedTo()), dt, true, true, slave);
-							}
-							
-						} else {
-							slave.equipClothingFromNowhere(clothing, true, slave);
-						}
+				if(room!=null) {
+					AbstractClothing pump = slave.getClothingInSlot(InventorySlot.NIPPLE);
+					if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_breast_pumps"))) {
+						slave.forceUnequipClothingIntoVoid(slave, pump);
 					}
-					room.clearClothingRemovedForMilking(slave);
+					pump = slave.getClothingInSlot(InventorySlot.STOMACH);
+					if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_breast_pumps"))) {
+						slave.forceUnequipClothingIntoVoid(slave, pump);
+					}
+					pump = slave.getClothingInSlot(InventorySlot.PENIS);
+					if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_penis_pump"))) {
+						slave.forceUnequipClothingIntoVoid(slave, pump);
+					}
+					pump = slave.getClothingInSlot(InventorySlot.VAGINA);
+					if(pump!=null && pump.getClothingType().equals(ClothingType.getClothingTypeFromId("innoxia_milking_vagina_pump"))) {
+						slave.forceUnequipClothingIntoVoid(slave, pump);
+					}
+					
+					List<AbstractClothing> clothingRemoved = room.getClothingRemovedForMilking().get(slave.getId());
+					if(clothingRemoved!=null) {
+						for(AbstractClothing clothing : clothingRemoved) {
+							if(slave.getClothingCurrentlyEquipped().contains(clothing)) {
+								for(DisplacementType dt : new ArrayList<>(clothing.getDisplacedList())) {
+									slave.isAbleToBeReplaced(slave.getClothingInSlot(clothing.getSlotEquippedTo()), dt, true, true, slave);
+								}
+								
+							} else {
+								slave.equipClothingFromNowhere(clothing, true, slave);
+							}
+						}
+						room.clearClothingRemovedForMilking(slave);
+					}
 				}
-			}
+//			}
 		}
 	},
 	
@@ -784,10 +786,16 @@ public enum SlaveJob {
 		}
 		@Override
 		public AbstractPlaceType getPlaceLocation(GameCharacter character) {
+			if(Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceUpgrade.LILAYA_SPA).isEmpty()) {
+				return PlaceType.LILAYA_HOME_FOUNTAIN;
+			}
 			return Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceUpgrade.LILAYA_SPA).get(0).getPlace().getPlaceType();
 		}
 		@Override
 		public Cell getWorkDestinationCell(int hour, GameCharacter slave) {
+			if(Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceUpgrade.LILAYA_SPA).isEmpty()) {
+				return Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceType.LILAYA_HOME_FOUNTAIN).get(0);
+			}
 			return Main.game.getWorlds().get(WorldType.LILAYAS_HOUSE_GROUND_FLOOR).getCells(PlaceUpgrade.LILAYA_SPA).get(0);
 		}
 		@Override

@@ -38,6 +38,10 @@ public class ItemGeneration {
 	
 	// Item generation:
 
+	public AbstractItem generateItem(String id) {
+		return new AbstractItem(ItemType.getItemTypeFromId(id)) {};
+	}
+	
 	public AbstractItem generateItem(AbstractItemType itemType) {
 		return new AbstractItem(itemType) {};
 	}
@@ -173,19 +177,31 @@ public class ItemGeneration {
 		return this.generateClothing(ClothingType.getClothingTypeFromId(clothingTypeId), colourShade, null, null, allowRandomEnchantment);
 	}
 
-	/** Allows random enchantment. Uses random colour.*/
+	/** Uses random colour.*/
 	public AbstractClothing generateClothing(AbstractClothingType clothingType) {
 		return this.generateClothing(clothingType, null, true);
 	}
 
-	/** Uses random colour.*/
+	/** Allows random enchantment. Uses random colour.*/
 	public AbstractClothing generateClothing(AbstractClothingType clothingType, boolean allowRandomEnchantment) {
 		return this.generateClothing(clothingType, null, allowRandomEnchantment);
 	}
 
-	/** Uses random colour.*/
+	/** Allows random enchantment. Uses random colour.*/
 	public AbstractClothing generateClothing(String clothingTypeId, boolean allowRandomEnchantment) {
 		AbstractClothingType type = ClothingType.getClothingTypeFromId(clothingTypeId);
+		return this.generateClothing(type, null, allowRandomEnchantment);
+	}
+
+	/** Allows random enchantment. Uses random colour. Restricted by slotHint.*/
+	public AbstractClothing generateClothing(String clothingTypeId, boolean allowRandomEnchantment, String slotHint) {
+		AbstractClothingType type = ClothingType.getClothingTypeFromId(clothingTypeId, slotHint);
+		return this.generateClothing(type, null, allowRandomEnchantment);
+	}
+
+	/** Allows random enchantment. Uses random colour. Restricted by slot.*/
+	public AbstractClothing generateClothing(String clothingTypeId, boolean allowRandomEnchantment, InventorySlot slot) {
+		AbstractClothingType type = ClothingType.getClothingTypeFromId(clothingTypeId, slot.toString());
 		return this.generateClothing(type, null, allowRandomEnchantment);
 	}
 

@@ -30,7 +30,6 @@ import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.game.character.npc.misc.Elemental;
 import com.lilithsthrone.game.character.persona.Occupation;
 import com.lilithsthrone.game.character.race.Subspecies;
-import com.lilithsthrone.game.combat.Combat;
 import com.lilithsthrone.game.combat.moves.CombatMove;
 import com.lilithsthrone.game.combat.spells.Spell;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
@@ -51,7 +50,6 @@ import com.lilithsthrone.game.inventory.ShopTransaction;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.BodyPartClothingBlock;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
-import com.lilithsthrone.game.inventory.enchanting.TFEssence;
 import com.lilithsthrone.game.inventory.item.AbstractItem;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeapon;
 import com.lilithsthrone.game.settings.KeyboardAction;
@@ -211,7 +209,7 @@ public enum RenderingEngine {
 			piercingStyle = "width:35%; margin:5.5% 7.5%;";
 		}
 		
-		int essenceCount = charactersInventoryToRender.getEssenceCount(TFEssence.ARCANE);
+		int essenceCount = charactersInventoryToRender.getEssenceCount();
 		
 		// Main weapon:
 		AbstractWeapon weaponInSlot = charactersInventoryToRender.getMainWeapon(0);
@@ -745,7 +743,7 @@ public enum RenderingEngine {
 			// 85% is the encompassing width
 			if(charactersInventoryToRender.isPlayer()) {
 				inventorySB.append(
-						"<div style='"+style+" width:26.3%;'>"+ UtilText.formatAsEssences(charactersInventoryToRender.getEssenceCount(TFEssence.ARCANE), "b", true) +"</div>"
+						"<div style='"+style+" width:26.3%;'>"+ UtilText.formatAsEssences(charactersInventoryToRender.getEssenceCount(), "b", true) +"</div>"
 						+ "<div style='"+style+" width:33.416%;'>"+ UtilText.formatAsMoney(charactersInventoryToRender.getMoney(), "b") +"</div>"
 						+ "<div class='normal-button"+(transferDisabled?" disabled":"")+"' id='"+idModifier+"MONEY_TRANSFER_SMALL' style='"+buttonStyle+"'>[style."+(transferDisabled?"colourDisabled":"colourMinorGood")+"(&gt;)]</div>"
 						+ "<div class='normal-button"+(transferDisabled?" disabled":"")+"' id='"+idModifier+"MONEY_TRANSFER_AVERAGE' style='"+buttonStyle+"'>[style."+(transferDisabled?"colourDisabled":"colourGood")+"(&gt;)]</div>"
@@ -757,7 +755,7 @@ public enum RenderingEngine {
 						+ "<div class='normal-button"+(transferDisabled?" disabled":"")+"' id='"+idModifier+"MONEY_TRANSFER_AVERAGE' style='"+buttonStyle+"'>[style."+(transferDisabled?"colourDisabled":"colourGood")+"(&lt;)]</div>"
 						+ "<div class='normal-button"+(transferDisabled?" disabled":"")+"' id='"+idModifier+"MONEY_TRANSFER_SMALL' style='"+buttonStyle+"'>[style."+(transferDisabled?"colourDisabled":"colourMinorGood")+"(&lt;)]</div>"
 						+ "<div style='"+style+" width:33.416%;'>"+ (transferDisabled?UtilText.formatAsMoney("[style.colourUnknown(Unknown)]", "b"):UtilText.formatAsMoney(charactersInventoryToRender.getMoney(), "b")) +"</div>"
-						+ "<div style='"+style+" width:26.3%;'>"+ UtilText.formatAsEssences(charactersInventoryToRender.getEssenceCount(TFEssence.ARCANE), "b", true) +"</div>");
+						+ "<div style='"+style+" width:26.3%;'>"+ UtilText.formatAsEssences(charactersInventoryToRender.getEssenceCount(), "b", true) +"</div>");
 			}
 			
 		} else {
@@ -962,7 +960,7 @@ public enum RenderingEngine {
 				AbstractItem abItem = (AbstractItem)item;
 				if ((nonPlayerInv && InventoryDialogue.getNPCInventoryInteraction()!=InventoryInteraction.FULL_MANAGEMENT)
 						|| (Main.game.isInSex() && (isTraderInv || !abItem.isAbleToBeUsedInSex() || !Main.sex.isItemUseAvailable()))
-						|| (Main.game.isInCombat() && (!abItem.isAbleToBeUsedInCombat() || Main.game.getPlayer().isStunned() || Combat.isCombatantDefeated(Main.game.getPlayer())))) {
+						|| (Main.game.isInCombat() && ((!abItem.isAbleToBeUsedInCombatAllies() && !abItem.isAbleToBeUsedInCombatEnemies()) || Main.game.getPlayer().isStunned() || Main.combat.isCombatantDefeated(Main.game.getPlayer())))) {
 					overlay += " disabled";
 				}
 				
@@ -1001,7 +999,7 @@ public enum RenderingEngine {
 		if (item instanceof AbstractItem) {
 			AbstractItem abItem = (AbstractItem)item;
 			if ((Main.game.isInSex() && !abItem.isAbleToBeUsedInSex())
-					|| (Main.game.isInCombat() && (!abItem.isAbleToBeUsedInCombat() || Main.game.getPlayer().isStunned() || Combat.isCombatantDefeated(Main.game.getPlayer())))) {
+					|| (Main.game.isInCombat() && ((!abItem.isAbleToBeUsedInCombatAllies() && !abItem.isAbleToBeUsedInCombatEnemies()) || Main.game.getPlayer().isStunned() || Main.combat.isCombatantDefeated(Main.game.getPlayer())))) {
 				overlay += " disabled";
 			}
 			
@@ -1167,9 +1165,9 @@ public enum RenderingEngine {
 										:"134")
 									+"vw); overflow-y: auto;'>");
 			
-			uiAttributeSB.append(getCharacterPanelDiv(Combat.getAllies(Main.game.getPlayer()).size()>0, "PLAYER_", Main.game.getPlayer()));
+			uiAttributeSB.append(getCharacterPanelDiv(Main.combat.getAllies(Main.game.getPlayer()).size()>0, "PLAYER_", Main.game.getPlayer()));
 			
-			for(GameCharacter character : Combat.getAllies(Main.game.getPlayer())) {
+			for(GameCharacter character : Main.combat.getAllies(Main.game.getPlayer())) {
 				uiAttributeSB.append(getCharacterPanelDiv(true, "NPC_"+character.getId()+"_", character));
 			}
 			
@@ -1319,7 +1317,7 @@ public enum RenderingEngine {
 		}
 		
 		if(Main.game.isInCombat()) {
-			return Combat.getTargetedCombatant();
+			return Main.combat.getTargetedCombatant();
 		}
 		
 		if(InventoryDialogue.getInventoryNPC()!=null && Main.game.getCurrentDialogueNode().getDialogueNodeType() == DialogueNodeType.INVENTORY) {
@@ -1393,14 +1391,14 @@ public enum RenderingEngine {
 					"<div class='full-width-container' style='background-color:"+PresetColour.BACKGROUND_DARK.toWebHexString()+"; border-radius:5px; margin-bottom:8px;'>"
 						+ "<div class='full-width-container'>"
 							+ "<p class='character-name' style='color:"+ PresetColour.BASE_CRIMSON.toWebHexString()+";'>"
-								+ (Combat.getEnemies(Main.game.getPlayer()).size()>1?"Enemies":"Enemy")
+								+ (Main.combat.getEnemies(Main.game.getPlayer()).size()>1?"Enemies":"Enemy")
 							+"</p>"
 						+ "</div>"
 					+ "</div>"
 					+ "<div class='full-width-container' style='height: calc(100% - 128vw); overflow-y: auto;'>");
 				
-				for(GameCharacter character : Combat.getEnemies(Main.game.getPlayer())) {
-					uiAttributeSB.append(getCharacterPanelDiv(Combat.getEnemies(Main.game.getPlayer()).size()>1, "NPC_"+character.getId()+"_", character));
+				for(GameCharacter character : Main.combat.getEnemies(Main.game.getPlayer())) {
+					uiAttributeSB.append(getCharacterPanelDiv(Main.combat.getEnemies(Main.game.getPlayer()).size()>1, "NPC_"+character.getId()+"_", character));
 				}
 				
 				
@@ -2399,9 +2397,9 @@ public enum RenderingEngine {
 		panelSB.append(
 				"<div class='attribute-container' style='"
 						+ (Main.game.isInCombat()
-								?(Combat.getTargetedCombatant().equals(character)
+								?(Main.combat.getTargetedCombatant().equals(character)
 										?"border:2px solid "+PresetColour.GENERIC_COMBAT.toWebHexString()+";"
-										:(Combat.getTargetedAlliedCombatant().equals(character)
+										:(Main.combat.getTargetedAlliedCombatant().equals(character)
 												?"border:2px solid "+PresetColour.GENERIC_MINOR_GOOD.toWebHexString()+";"
 												:"border:1px solid "+PresetColour.TEXT_GREY_DARK.toWebHexString()+";"))
 								:"border:1px solid "+PresetColour.TEXT_GREY_DARK.toWebHexString()+";")
@@ -2440,7 +2438,7 @@ public enum RenderingEngine {
 						+ (character.isPlayer()
 								?"<div class='full-width-container' style='text-align:center;'>"
 									+ "<div class='half-width-container' style='padding:0 8px;'>"+ UtilText.formatAsMoney(character.getMoney(), "b") +"</div>"
-									+ "<div class='half-width-container' style='padding:0 8px;'>"+ UtilText.formatAsEssences(character.getEssenceCount(TFEssence.ARCANE), "b", true) +"</div>"
+									+ "<div class='half-width-container' style='padding:0 8px;'>"+ UtilText.formatAsEssences(character.getEssenceCount(), "b", true) +"</div>"
 								+"</div>"
 								:"")
 					+"</div>");

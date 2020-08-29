@@ -328,7 +328,8 @@ public class Kate extends NPC {
 		clearNonEquippedInventory(false);
 
 		for(AbstractItemType item : ItemType.getAllItems()) {
-			if(item.getItemTags().contains(ItemTag.SOLD_BY_KATE)) {
+			if(item.getItemTags().contains(ItemTag.SOLD_BY_KATE)
+					&& (!item.getItemTags().contains(ItemTag.SILLY_MODE) || Main.game.isSillyMode())) {
 				this.addItem(Main.game.getItemGen().generateItem(item), !item.isConsumedOnUse()?1:(6+Util.random.nextInt(12)), false, false);
 			}
 		}
@@ -336,7 +337,8 @@ public class Kate extends NPC {
 		List<AbstractClothing> clothingToSell = new ArrayList<>();
 		
 		for(AbstractClothingType clothing : ClothingType.getAllClothing()) {
-			if(clothing.getDefaultItemTags().contains(ItemTag.SOLD_BY_KATE)) {
+			if(clothing.getDefaultItemTags().contains(ItemTag.SOLD_BY_KATE)
+					&& (!clothing.getDefaultItemTags().contains(ItemTag.SILLY_MODE) || Main.game.isSillyMode())) {
 				clothingToSell.add(Main.game.getItemGen().generateClothing(clothing, false));
 			}
 		}
@@ -482,11 +484,11 @@ public class Kate extends NPC {
 	@Override
 	public Value<Boolean, String> getItemUseEffects(AbstractItem item,  GameCharacter itemOwner, GameCharacter user, GameCharacter target) {
 		if(user.isPlayer() && !target.isPlayer()) {
-			if(item.getItemType().equals(ItemType.VIXENS_VIRILITY)) {
+			if(item.getItemType().equals(ItemType.getItemTypeFromId("innoxia_pills_fertility"))) {
 				itemOwner.useItem(item, target, false);
 				return new Value<>(true,
 						"<p>"
-							+ "Producing a '[#ITEM_VIXENS_VIRILITY.getName(false)]' from your inventory, you pop it out of its plastic wrapper before pushing it into Kate's mouth."
+							+ "Producing a '[#ITEM_innoxia_pills_fertility.getName(false)]' from your inventory, you pop it out of its plastic wrapper before pushing it into Kate's mouth."
 							+ " She giggles as she happily swallows the little pink pill, knowing that it's going to make her womb far more fertile."
 						+ "</p>");
 			} else {

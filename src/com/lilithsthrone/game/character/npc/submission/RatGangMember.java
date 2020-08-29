@@ -30,7 +30,6 @@ import com.lilithsthrone.game.character.race.SubspeciesPreference;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.companions.SlaveDialogue;
-import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.RatWarrensCaptiveDialogue;
 import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.RatWarrensDialogue;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
@@ -218,9 +217,6 @@ public class RatGangMember extends NPC {
 	@Override
 	public Response endCombat(boolean applyEffects, boolean victory) {
 		if(victory) {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.ratWarrensCaptiveAttemptingEscape)) {
-				return new Response("", "", RatWarrensCaptiveDialogue.CAPTIVE_ESCAPE_FIGHT_VICTORY);
-			}
 			return new Response("", "", RatWarrensDialogue.GUARD_COMBAT_VICTORY) {
 				@Override
 				public void effects() {
@@ -251,19 +247,16 @@ public class RatGangMember extends NPC {
 							Main.game.getDialogueFlags().setFlag(DialogueFlagValue.ratWarrensClearedCentre, true);
 						}
 					}
+					if(Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_CHECKPOINT_LEFT
+							|| Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_DORMITORY_LEFT
+							|| Main.game.getPlayerCell().getPlace().getPlaceType()==PlaceType.RAT_WARRENS_CORRIDOR_LEFT) {
+						Main.game.getNpc(Murk.class).setLocation(WorldType.RAT_WARRENS, PlaceType.RAT_WARRENS_VENGARS_HALL);
+					}
+					RatWarrensDialogue.banishTwoGuards();
 				}
 			};
 			
 		} else {
-			if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.ratWarrensCaptiveAttemptingEscape)) {
-				return new Response("", "", RatWarrensCaptiveDialogue.CAPTIVE_ESCAPE_FIGHT_DEFEAT) {
-					@Override
-					public void effects() {
-						RatWarrensDialogue.applyCombatDefeatFlagsReset();
-						Main.game.getNpc(Murk.class).setLocation(WorldType.RAT_WARRENS, PlaceType.RAT_WARRENS_MILKING_STORAGE);
-					}
-				};
-			}
 			return new Response("", "", RatWarrensDialogue.GUARD_COMBAT_DEFEAT) {
 				@Override
 				public void effects() {

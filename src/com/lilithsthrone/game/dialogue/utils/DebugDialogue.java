@@ -23,11 +23,13 @@ import com.lilithsthrone.game.character.npc.misc.GenericSexualPartner;
 import com.lilithsthrone.game.character.persona.PersonalityTrait;
 import com.lilithsthrone.game.character.quests.Quest;
 import com.lilithsthrone.game.character.quests.QuestLine;
+import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
 import com.lilithsthrone.game.combat.spells.SpellSchool;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.DialogueNode;
+import com.lilithsthrone.game.dialogue.npcDialogue.dominion.WesQuest;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.responses.ResponseSex;
 import com.lilithsthrone.game.inventory.InventorySlot;
@@ -35,7 +37,6 @@ import com.lilithsthrone.game.inventory.ItemTag;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothingType;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
-import com.lilithsthrone.game.inventory.enchanting.TFEssence;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeaponType;
@@ -47,6 +48,7 @@ import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.colours.BaseColour;
 import com.lilithsthrone.utils.colours.Colour;
 import com.lilithsthrone.utils.colours.PresetColour;
+import com.lilithsthrone.world.places.PlaceType;
 
 /**
  * @since 0.1.0
@@ -185,13 +187,11 @@ public class DebugDialogue {
 					return new Response("+1000 essences", "Add 1000 arcane essences.", DEBUG_MENU){
 						@Override
 						public void effects() {
-							for(TFEssence essence : TFEssence.values()) {
-								Main.game.getPlayer().incrementEssenceCount(essence, 1000, false);
-							}
+							Main.game.getPlayer().incrementEssenceCount(1000, false);
 						}
 					};
 					
-				}else if (index == 13) {
+				} else if (index == 13) {
 					return new Response("Very long action text for testing", "Very long action text for testing.", null);
 					
 				}
@@ -495,6 +495,16 @@ public class DebugDialogue {
 							Main.game.getTextEndStringBuilder().append(Main.game.getDialogueFlags().incrementNatalyaPoints(1000));
 						}
 					};
+					
+				} else if(index==15) {
+					if(Main.game.getPlayer().hasQuest(QuestLine.SIDE_WES)) {
+						return new Response("Wes test", "You have already started Wes's quest!", null);
+					}
+					if(Main.game.getPlayer().getLocationPlace().getPlaceType()!=PlaceType.DOMINION_STREET) {
+						return new Response("Wes test", "You need to be on a Dominion Street tile to trigger this!", null);
+					}
+					return new Response("Wes test", "Spawn Wes and start his quest.<br/>[style.italicsBad(Warning! Save your game before testing this! Please only test this if you know what you're doing!!!)]", WesQuest.WES_QUEST_START);
+					
 				}
 				
 			} else if(responseTab == 3) {
@@ -1012,8 +1022,12 @@ public class DebugDialogue {
 		
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			if (index != 0 && index < Subspecies.values().length) {
-				Subspecies subspecies = Subspecies.values()[index - 1];
+			List<Subspecies> availableSubspecies = new ArrayList<>();
+			Collections.addAll(availableSubspecies, Subspecies.values());
+			availableSubspecies.removeIf(s->s.getRace()==Race.ELEMENTAL);
+			
+			if (index != 0 && index < availableSubspecies.size()) {
+				Subspecies subspecies = availableSubspecies.get(index - 1);
 				String name = subspecies.getName(null);
 				
 				return new Response(
