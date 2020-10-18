@@ -178,7 +178,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * @since 0.1.0
- * @version 0.3.8.9
+ * @version 0.3.9.9
  * @author Innoxia, Pimvgd, AlacoGit
  */
 public class UtilText {
@@ -198,6 +198,7 @@ public class UtilText {
 	private static ScriptEngine engine;
 	
 	private static List<String> specialParsingStrings = new ArrayList<>();
+	private static List<GameCharacter> parsingCharactersForSpeech = new ArrayList<>();
 	
 	private static Map<String, String> americanEnglishConversions = Util.newHashMapOfValues(
 			// -our to -or:
@@ -415,7 +416,7 @@ public class UtilText {
 		
 		String[] splitOnConditional = modifiedSentence.split("#THEN");
 		
-		modifiedSentence = splitOnConditional[splitOnConditional.length-1];
+		modifiedSentence = UtilText.parse(parsingCharactersForSpeech, splitOnConditional[splitOnConditional.length-1]);
 		
 		if(target.hasPersonalityTrait(PersonalityTrait.MUTE)) {
 			modifiedSentence = Util.replaceWithMute(modifiedSentence, Main.game.isInSex() && Main.sex.getAllParticipants().contains(target));
@@ -938,7 +939,10 @@ public class UtilText {
 	 * Parses supplied text.
 	 */
 	public static String parse(List<GameCharacter> specialNPC, String input, boolean xmlParsing, List<ParserTag> tags) {
+		List<GameCharacter> parsingCharactersForSpeechSaved;
 		parserTags = (tags);
+		parsingCharactersForSpeechSaved = parsingCharactersForSpeech;
+		parsingCharactersForSpeech = specialNPC;
 		
 		if(Main.game!=null && Main.game.getCurrentDialogueNode()==DebugDialogue.PARSER) {
 			input = input.replaceAll("\u200b", "");
@@ -1244,6 +1248,7 @@ public class UtilText {
 			
 			if (startIndex != 0) {
 				System.err.println("Error in parsing: StartIndex:"+startIndex+" ("+target+", "+command+") - "+input.substring(startIndex, Math.min(input.length()-1, startIndex+20)));
+				parsingCharactersForSpeech = parsingCharactersForSpeechSaved;
 				return input;
 			}
 			if (startedParsingSegmentAt < input.length()) {
@@ -1254,12 +1259,14 @@ public class UtilText {
 			
 			//TODO This really should be somewhere else or handled differently...
 			result = result.replaceAll("german", "German"); // This is needed as the subspecies 'german-shepherd-morph' needs to use a lowercase 'g' for generic name determiner detection.
-			
+
+			parsingCharactersForSpeech = parsingCharactersForSpeechSaved;
 			return result;
 			
 		} catch(Exception ex) {
 			System.err.println("Failed to parse: "+input);
 			ex.printStackTrace();
+			parsingCharactersForSpeech = parsingCharactersForSpeechSaved;
 			return "";
 		}
 	}
@@ -2177,7 +2184,7 @@ public class UtilText {
 		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
-						"miss",
+						"maam",
 						"ma'am",
 						"sir"),
 				true,
@@ -3188,7 +3195,9 @@ public class UtilText {
 		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
-						"speechMasculineStrong"),
+						"speechMasculineStrong",
+						"speechMasculineHeavy",
+						"speechMasculinePlus"),
 				false,
 				false,
 				"(speech content)",
@@ -3239,7 +3248,9 @@ public class UtilText {
 		
 		commandsList.add(new ParserCommand(
 				Util.newArrayListOfValues(
-						"speechFeminineStrong"),
+						"speechFeminineStrong",
+						"speechFeminineHeavy",
+						"speechFemininePlus"),
 				false,
 				false,
 				"(speech content)",

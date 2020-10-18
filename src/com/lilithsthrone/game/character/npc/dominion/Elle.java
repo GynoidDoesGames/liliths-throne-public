@@ -6,9 +6,11 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.lilithsthrone.game.Game;
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.CharacterImportSetting;
 import com.lilithsthrone.game.character.EquipClothingSetting;
+import com.lilithsthrone.game.character.GameCharacter;
 import com.lilithsthrone.game.character.body.Covering;
 import com.lilithsthrone.game.character.body.types.AssType;
 import com.lilithsthrone.game.character.body.types.BodyCoveringType;
@@ -36,8 +38,10 @@ import com.lilithsthrone.game.character.body.valueEnums.OrificeModifier;
 import com.lilithsthrone.game.character.body.valueEnums.TongueLength;
 import com.lilithsthrone.game.character.body.valueEnums.Wetness;
 import com.lilithsthrone.game.character.body.valueEnums.WingSize;
+import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.PerkCategory;
 import com.lilithsthrone.game.character.effects.PerkManager;
+import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
 import com.lilithsthrone.game.character.gender.Gender;
@@ -54,7 +58,11 @@ import com.lilithsthrone.game.dialogue.DialogueNode;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.AbstractCoreItem;
 import com.lilithsthrone.game.inventory.CharacterInventory;
+import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.ClothingType;
+import com.lilithsthrone.game.inventory.item.AbstractItem;
+import com.lilithsthrone.game.inventory.item.ItemType;
+import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.Util.Value;
@@ -65,7 +73,7 @@ import com.lilithsthrone.world.places.PlaceType;
 /**
  * @since 0.3.9.4
  * @version 0.3.9.4
- * @author DSG, Innoxia
+ * @author DSG (character creator), Innoxia
  */
 public class Elle extends NPC {
 
@@ -90,12 +98,15 @@ public class Elle extends NPC {
 	@Override
 	public void loadFromXML(Element parentElement, Document doc, CharacterImportSetting... settings) {
 		loadNPCVariablesFromXML(this, null, parentElement, doc, settings);
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.3.9.7")) {
+			equipClothing(EquipClothingSetting.getAllClothingSettings());
+		}
 	}
 
 	@Override
 	public void setupPerks(boolean autoSelectPerks) {
 		PerkManager.initialisePerks(this,
-				Util.newArrayListOfValues(),
+				Util.newArrayListOfValues(Perk.BARREN),
 				Util.newHashMapOfValues(
 						new Value<>(PerkCategory.PHYSICAL, 1),
 						new Value<>(PerkCategory.LUST, 3),
@@ -119,6 +130,7 @@ public class Elle extends NPC {
 			this.addFetish(Fetish.FETISH_ORAL_GIVING);
 
 			this.setFetishDesire(Fetish.FETISH_SADIST, FetishDesire.THREE_LIKE);
+			this.setFetishDesire(Fetish.FETISH_PENIS_RECEIVING, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_VAGINAL_RECEIVING, FetishDesire.THREE_LIKE);
 			this.setFetishDesire(Fetish.FETISH_ANAL_RECEIVING, FetishDesire.THREE_LIKE);
 		}
@@ -133,9 +145,8 @@ public class Elle extends NPC {
 		this.setAssType(AssType.DEMON_COMMON);
 		this.setBreastType(BreastType.DEMON_COMMON);
 		this.setVaginaType(VaginaType.DEMON_COMMON);
-//		this.setTailType(TailType.DEMON_COMMON); //TODO?
 		this.setWingType(WingType.DEMON_COMMON);
-		this.setWingSize(WingSize.THREE_LARGE.getValue()); //TODO?
+		this.setWingSize(WingSize.THREE_LARGE.getValue());
 		this.setEyeType(EyeType.DEMON_COMMON);
 		this.setSubspeciesOverride(Subspecies.HALF_DEMON);
 		
@@ -145,7 +156,7 @@ public class Elle extends NPC {
 		this.setMuscle(70);
 		this.setBodySize(50);
 		
-		// Coverings: //TODO?
+		// Coverings:
 		this.setEyeCovering(new Covering(BodyCoveringType.EYE_DEMON_COMMON, PresetColour.EYE_PINK));
 		this.setSkinCovering(new Covering(BodyCoveringType.DEMON_COMMON, PresetColour.SKIN_LILAC), true);
 		this.setSkinCovering(new Covering(BodyCoveringType.HORSE_HAIR, PresetColour.COVERING_BROWN), true);
@@ -179,7 +190,7 @@ public class Elle extends NPC {
 		this.setNippleSize(NippleSize.TWO_BIG);
 		this.setAreolaeSize(AreolaeSize.TWO_BIG);
 		
-		this.setNippleCapacity(Capacity.ONE_EXTREMELY_TIGHT.getMedianValue(), true); //TODO?
+		this.setNippleCapacity(Capacity.ONE_EXTREMELY_TIGHT.getMedianValue(), true);
 		
 		// Crotch-boobs:
 		this.setBreastCrotchType(BreastType.NONE);
@@ -237,9 +248,18 @@ public class Elle extends NPC {
 			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_flsldshirt", PresetColour.CLOTHING_GREY, PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_GOLD, false), true, this);
 			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfskirt", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_GOLD, null, false), true, this);
 			
-			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("dsg_eep_uniques_enfdjacket_elle", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_GREY, PresetColour.CLOTHING_GOLD, false), true, this);
-			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfberet_sword", PresetColour.CLOTHING_GREY, PresetColour.CLOTHING_BLACK, null, false), true, this);
+			AbstractClothing jacket = Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdjacket", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_GREY, PresetColour.CLOTHING_GOLD, false);
+			jacket.setSticker("collar", "tab_su");
+			jacket.setSticker("name", "name_elle");
+			jacket.setSticker("ribbon", "ribbon_elle");
+			jacket.setSticker("qual", "qual_flyer");
+			this.equipClothingFromNowhere(jacket, true, this);
 
+			AbstractClothing beret = Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfberet", PresetColour.CLOTHING_GREY, PresetColour.CLOTHING_BLACK, null, false);
+			beret.setSticker("flash", "flash_sword");
+			this.equipClothingFromNowhere(beret, true, this);
+			
+			
 			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdbelt", PresetColour.CLOTHING_DESATURATED_BROWN, PresetColour.CLOTHING_DESATURATED_BROWN, PresetColour.CLOTHING_GOLD, false), true, this);
 			
 			this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing(ClothingType.WRIST_WOMENS_WATCH, PresetColour.CLOTHING_DESATURATED_BROWN, false), true, this);
@@ -265,11 +285,11 @@ public class Elle extends NPC {
 	}
 	
 	@Override
-	public String getSpeechColour() {//TODO
+	public String getSpeechColour() {
 		if(Main.getProperties().hasValue(PropertyValue.lightTheme)) {
 			return "#754a86";
 		}
-		return "#d69423";
+		return "#d0a0e2";
 	}
 	
 	@Override
@@ -283,23 +303,21 @@ public class Elle extends NPC {
 	
 	@Override
 	public boolean isAbleToBeImpregnated() {
-		return true;
+		return false;
 	}
 	
 	@Override
 	public void turnUpdate() {
 		if(!Main.game.getCharactersPresent().contains(this)) {
 			if(Main.game.isWorkTime()) {
-				if(this.isSlave()) {
-					this.setLocation(WorldType.ENFORCER_HQ, PlaceType.ENFORCER_HQ_REQUISITIONS, true);
-					
-				} else {
-					this.setLocation(WorldType.ENFORCER_HQ, PlaceType.ENFORCER_HQ_OFFICE_QUARTERMASTER, true);
-				}
+				this.setLocation(WorldType.ENFORCER_HQ, PlaceType.ENFORCER_HQ_REQUISITIONS, true);
 				
 			} else {
 				this.setLocation(WorldType.EMPTY, PlaceType.GENERIC_HOLDING_CELL, false);
 			}
+		}
+		if(!this.hasStatusEffect(StatusEffect.PROMISCUITY_PILL)) {
+			Main.game.getItemGen().generateItem("innoxia_pills_sterility").applyEffect(this, this);
 		}
 	}
 	
@@ -331,10 +349,9 @@ public class Elle extends NPC {
 			this.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_tacequipset_telbowpads", false), 5, false, false);
 			this.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_tacequipset_tkneepads", false), 5, false, false);
 			this.addClothing(Main.game.getItemGen().generateClothing("dsg_hndcuffs_hndcuffs", false), 5, false, false);
-			
-			//TODO after sticker system:
-			//dsg_eep_ptrlequipset_stpvest
-			//dsg_eep_tacequipset_pltcarrier
+
+			this.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_stpvest", false), 5, false, false);
+			this.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_tacequipset_pltcarrier", false), 5, false, false);
 		}
 	}
 	
@@ -356,5 +373,37 @@ public class Elle extends NPC {
 	@Override
 	public float getSellModifier(AbstractCoreItem item) {
 		return 1.5f;
+	}
+	
+	@Override
+	public Value<Boolean, String> getItemUseEffects(AbstractItem item,  GameCharacter itemOwner, GameCharacter user, GameCharacter target) {
+		if(user.isPlayer() && !target.isPlayer()) {
+			if(item.getItemType().equals(ItemType.getItemTypeFromId("innoxia_pills_fertility")) || item.getItemType().equals(ItemType.getItemTypeFromId("innoxia_pills_broodmother"))) {
+				return new Value<>(true,
+						"<p>"
+							+ "Producing "+item.getName(true, false)+" from your inventory, you prepare to offer it to Elle, but before you can even get that far, the [elle.race] sees what it is you're holding and declares,"
+							+ " [elle.speechNoEffects(There's no way I'm taking that! I have absolutely zero intention of ever getting pregnant, thank you very much!)]"
+						+ "</p>"
+						+ "<p>"
+							+ "Deciding that it would be a very bad idea to try and force Elle to take the pill, you put it away..."
+						+ "</p>");
+			}
+			return new Value<>(false,
+					"<p>"
+						+ "You start to pull "+item.getItemType().getDeterminer()+" "+item.getName()+" out from your inventory, but Elle quickly says that she has absolutely no intention of letting you use it on her."
+						+ " Deciding that it would be a very bad idea to try and force Elle to change her mind, you put "+(item.getItemType().isPlural()?"them":"it")+" away..."
+					+ "</p>");
+		}
+		return super.getItemUseEffects(item, itemOwner, user, target);
+	}
+
+	@Override
+	public SexPace getSexPaceSubPreference(GameCharacter character){
+		return SexPace.SUB_EAGER;
+	}
+
+	@Override
+	public SexPace getSexPaceDomPreference(){
+		return SexPace.DOM_NORMAL;
 	}
 }

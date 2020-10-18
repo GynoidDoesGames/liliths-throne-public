@@ -1199,7 +1199,7 @@ public enum Quest {
 		@Override
 		public String getDescription() {
 			return "While travelling through Dominion, you were approached by a mysterious undercover SWORD Enforcer who asked for your help."
-					+ " He'd like you to meet him near 'Pix's Playground' (in the Shopping Arcade) between [units.time(13)]-[units.time(14)].";
+					+ " He'd like you to meet him outside of the Shopping Arcade's antiques shop between [units.time(13)]-[units.time(14)].";
 		}
 		@Override
 		public String getCompletedDescription() {
@@ -1257,7 +1257,7 @@ public enum Quest {
 		}
 		@Override
 		public String getCompletedDescription() {
-			return "You sided with Wes, and after anonymously handing in the incriminating evidence, you met the fox-boy in the Shopping Arcade to discover that he's been promoted to take Elle's job."
+			return "You sided with Wes, and after anonymously handing in the incriminating evidence, you met the fox-boy in the Enforcer HQ to discover that he's been promoted to take Elle's job."
 					+ " With his new authority, he's granted you access to the Enforcer HQ's requisitions area as a reward for your help."
 					+ " You can also now freely visit Wes in the Enforcer HQ between the hours of [units.time(9)]-[units.time(17)].";
 		}

@@ -54,7 +54,7 @@ import javafx.stage.Stage;
 
 /**
  * @since 0.1.0
- * @version 0.3.9.3
+ * @version 0.3.9.9
  * @author Innoxia
  */
 public class Main extends Application {
@@ -71,7 +71,7 @@ public class Main extends Application {
 	
 	public static final String AUTHOR = "Innoxia";
 	public static final String GAME_NAME = "Lilith's Throne";
-	public static final String VERSION_NUMBER = "0.3.9.4";
+	public static final String VERSION_NUMBER = "0.3.9.9";
 	public static final String VERSION_DESCRIPTION = "Alpha";
 	
 	/**
@@ -92,18 +92,9 @@ public class Main extends Application {
 		+ "</p>"
 		
 		+ "<p>"
-			+ "I've managed to get the vast majority of bugs reported in v0.3.9.1 fixed for this release, and have also (finally) finished off the last placeholders related to the Rat Warrens content."
-			+ " I feel as though there are still some parts of that which could do with a lot of polish, and I also still need to add Shadow/Silence content, but I think I'll leave that until a later version."
-		+ "</p>"
-			
-		+ "<p>"
-			+ "I've also added support for (basic) item modding in this version, and I've also got a lot of background work done on adding the last character which I've planning on adding as the last piece of content before v0.4."
-			+ " I haven't quite got that into a state that's ready for full inclusion into the game, so I've decided to call this release v0.3.9.4, and will release the content for this new character by the end of the week as part of v0.3.9.5."
-		+ "</p>"
-			
-		+ "<p>"
-			+ "That should definitely be ready by this Sunday at the very latest, so I'll release the updated preview version of v0.3.9.5 by then,"
-				+ " and will then move on to getting the public version of v0.4 out within the next couple of weeks after that."
+			+ "This update just fixes bugs and makes some other minor changes."
+			+ " I'm sorry that I wasn't able to get race modding or the Fields added for this update."
+			+ " I'll continue working on v0.4 and get it out as soon as I possibly can!"
 		+ "</p>"
 		
 		+ "<br/>"
@@ -113,6 +104,127 @@ public class Main extends Application {
 			+ " If you wanted to ask me any specific questions about the game, you can either find me on my blog, or on the Lilith's Throne Discord. You can find a link to the discord on my blog. ^^"
 		+ "</p>"
 
+		+ "<br/>"
+
+		+ "<list>"
+			+ "<h6>v0.3.9.9</h6>"
+			+"<li>Gameplay:</li>"
+			+"<ul>Starting Claire's teleportation side-quest now requires you to have first completed the 'Slime Queen' side quest. (As I felt as though it was a little out of character for the Enforcers to let a stranger see the teleportation pads.)</ul>"
+			
+			+"<li>Items:</li>"
+			+"<ul>(For Clothing Modding) If multiple stickers in one sticker category are set to be the default sticker, one of these default stickers is now chosen at random to be used for an item of clothing, instead of always the last defined default sticker.</ul>"
+			+"<ul>Made the shoulder strap on the 'ragged chest wrap' a sticker option.</ul>"
+			+"<ul>'Impish Brew' now grants +25 corruption to potion effects, instead of +50.</ul>"
+			+"<ul>Added ability to enchant clothing with vagina and penis addition and removal effects.</ul>"
+			
+			+"<li>Sex:</li>"
+			+"<ul>You can no longer 'Encourage creampie' or 'Encourage pullout' when spectating in a 'hidden' position (such as when you watch your slaves having sex in the alleyway or hallway encounters).</ul>"
+			+"<ul>You can now use level drain on orgasming characters while in a spectator slot.</ul>"
+			+"<ul>Added interactions in the 'Sitting' position between the 'Sitting in lap' slot and the 'Between legs' slot.</ul>"
+			+"<ul>Added interactions in the 'Over Desk' position between the 'Lying back' slot and the 'Bent over' slot.</ul>"
+			+"<ul>Added kissing and groping interactions between dominant and submissive standing characters in the 'Standing' sex position.</ul>"
+			
+			+"<li>Other:</li>"
+			+"<ul>The output of all parsing commands embedded within speech should now be correctly modified by any speech-altering effects (such as a slovenly character pronouncing 'her' as ''er').</ul>"
+			+"<ul>Transformative potions which turn a character's lower body into a taur now correctly transform all of the body parts which are affected (all parts below the waist) into their default animal counterpart states.</ul>"
+			+"<ul>Added transformation actions to alleyway prostitutes' post-combat victory scene.</ul>"
+			+"<ul>Added pregnancy reactions to Murk's greeting dialogue while in Epona's tile.</ul>"
+			+"<ul>Standardised sorting of all racial transformation options by their race name.</ul>"
+			+"<ul>Half-demons no longer use the same outfit generation as dark alleyway demons, and dark alleyway demons now have a 5% chance to spawn with demon daggers instead of 50%.</ul>"
+			+"<ul>The 'Enforcer HQ' tile is no longer considered to be dangerous during an arcane storm.</ul>"
+			+"<ul>Increased the chance of the street encounter in which Wes's quest starts from 10% to 50%.</ul>"
+			
+			+"<li>Bugs:</li>"
+			+"<ul>Typo and parsing fixes.</ul>"
+			+"<ul>Fixed issues with sex scenes at Epona's stall in the Gambling Den being treated as public sex.</ul>"
+			+"<ul>Fixed bug where the Rat Warrens content would break if rat-morph Subspecies preferences were set to 'human'.</ul>"
+			+"<ul>Fixed bug where accessing the positioning menu in the prologue sex scene would reset all of the previous sex dialogue.</ul>"
+			+"<ul>Fixed issue with there being two 'miss' parsing commands.</ul>"
+			+"<ul>New slaves will now correctly start with all default job settings and permissions selected.</ul>"
+			+"<ul>Fixed harpy attacker NPC descriptions not changing when you become friends with them or enslave them.</ul>"
+			+"<ul>Fixed issue with the 'slovenly' character speech modification sometimes breaking parsing commands.</ul>"
+			+"<ul>Fixed Murk's and Lyssieth's special dirty talk text not being parsed as speech.</ul>"
+			+"<ul>Choosing to dominantly fuck Murk in Epona's tile (after completing Axel's quest) should now start with both of you in the intended positions.</ul>"
+			+"<ul>Fixed bug where slave interaction scenes in alleyways or Lilaya's corridor would sometimes throw background errors and not initialise correctly.</ul>"
+			+"<ul>The Spa tile is now correctly immune to arcane storm effects.</ul>"
+			+"<ul>Fixed issue with enslavement of friendly NPCs describing them as though they'd just been defeated in combat.</ul>"
+			+"<ul>Exiting Lyssieth's palace now correctly places you in the cavern tile instead of the palace gate tile.</ul>"
+			+"<ul>Fixed existing Patrol Enforcers in Dominion wearing 'contractor' stab-proof vests instead of Enforcer ones.</ul>"
+			+"<ul>If foot, anal, lactation, or non-con settings are turned off, NPCs will no longer have the related fetishes or fetish desires.</ul>"
+			+"<ul>If non-con is disabled, the related fetishes are now correctly hidden from the fetish list and fetish altering potion effects.</ul>"
+			+"<ul>Fixed NPCs being described as being in the 'holding cell' in their contacts page tooltip.</ul>"
+			+"<ul>Fixed issue where attributes derived from clothing could sometimes be duplicated or persist after the clothing's removal.</ul>"
+			+"<ul>Fixed issue where equipping transformative clothing onto demons or half-demons would sometimes spam the event log with messages.</ul>"
+			+"<ul>Dominant partners in the Watering Hole will no longer spawn with the 'submissive' fetish, and likewise Submissive partners will no longer spawn with the 'dominant' fetish.</ul>"
+			+"<ul>Fixed background errors being thrown if you decided to spam-click the 'New Game' action.</ul>"
+			+"<ul>Added a 'no preference' option to Scarlett's sex scene (where you act as her servant in Helena's nest), so that if you have no areas available for her to fuck, you no longer get stuck in that scene.</ul>"
+			+"<ul>Added actions to exit Helena's apartment at the entrance tile (for if you somehow manage to get stuck in there).</ul>"
+			+"<ul>Elementals now have the correct arcane storm status effect applied to them.</ul>"
+			+"<ul>Fixed bug where you could swap position with Murk's milkers during sex with them.</ul>"
+		+"</list>"
+		
+		+ "<br/>"
+		
+		+ "<list>"
+			+ "<h6>v0.3.9.8</h6>"
+			+"<li>Contributors:</li>"
+			+"<ul>Fixed issue where changing content options at the start of new character creation would throw background errors, causing the UI to become unresponsive. (by AceXP)</ul>"
+			+"<ul>Fixed issue where fluid addiction status effect tooltip descriptions would display 'demonic horse fluid' instead of 'demonic fluid'. (by AceXP)</ul>"
+			+"<ul>Fixed bug where the defined horse-morph names in Name.java were never being used. (by Rydelfox)</ul>"
+			+"<ul>Several parsing and typo fixes. (by AceXP)</ul>"
+			+"<ul>Fixed issue where you would return to an incorrect dialogue scene when leaving inventory management in a friendly occupant's apartment. (PR#1394 by AceXP)</ul>"
+			+"<ul>Typo fixes in the Rat Warrens. (Pr#1400 by aDrunkLittleDerp)</ul>"
+			+"<ul>While carrying an arcane makeup set, characters will now reapply heavy lipstick if it was worn off during sex. (PR#1403 by CognitiveMist)</ul>"
+			+"<ul>Fixed parser errors in vagina reveal descriptions. (PR#1404 by AceXP)</ul>"
+			+"<ul>Enable loading of patterns from the res/mods folder. (PR#1405 by AceXP)</ul>"
+			+"<ul>Fixed bug where five minutes passed, instead of twenty-five, when selling yourself as a submissive partner in Angel's Kiss. (PR#1406 by void-weaver)</ul>"
+			+"<ul>Fixed bug where Sean's fight scene wouldn't initialise correctly. (PR#1407 by void-weaver)</ul>"
+			+"<ul>Fixed bug where if you used an item from an NPC's inventory it would be described as though the NPC was using the item. (PR#1408)</ul>"
+			
+			+"<li>DSG's Enforcer Uniform Update:</li>"
+			+"<ul>Added sticker system support, consolidated all extant variants of the Enforcer stabvest, coat, waistcoat, beret, peaked cap, and bowler hat into their respective items.</ul>"
+			+"<ul>Added the following sticker assets that did not already exist in some form in the game: Combat Diver Badge, Commissioner Cap Badge, Commissioner/Deputy Commissioner Visor/Crown Oak Leaves, Commissioner Aiguillette, Elis Cap Badge, Thinis Cap Badge, Itza'aak Cap Badge, Lyonesse Cap Badge.</ul>"
+			+"<ul>Detailed buttons added to the Enforcer coat and waistcoat.</ul>"
+			+"<ul>Fixes and standardization of ribbon racks and name plates.</ul>"
+			+"<ul>Hand optimization of almost all vectorized text.</ul>"
+			+"<ul>Added the 'Contractor's' variant to the stab vest and plate carrier.</ul>"
+			
+			+"<li>DSG's Enforcer outfit update:</li>"
+			+"<ul>Added sticker and pattern support.</ul>"
+			+"<ul>Renamed conditionals to be more reader friendly.</ul>"
+			+"<ul>Changed comments to be more clear.</ul>"
+			+"<ul>Removed berets from the Patrol Service Uniform.</ul>"
+			+"<ul>Possibly fixed bugs related to headgear spawning on Enforcers with the wrong colors and no headgear spawning on Enforcers entirely.</ul>"
+			
+			+"<li>Engine:</li>"
+			+"<ul>Added ItemTags for defining items, clothing, and weapons as being restricted or illegal, causing them to be unable to be sold to merchants and confiscated by Enforcers.</ul>"
+			+"<ul>Added mod support for defining clothing 'stickers', which apply cosmetic changes to clothing items. (See 'res/mods/innoxia/items/clothing/rentalMommy/rental_mommy.xml' for a fully documented example of how to define them.)</ul>"
+			
+			+"<li>Gameplay:</li>"
+			+"<ul>Added two new Enforcer characters and a new quest involving them, all of which has been designed by DSG. The start of this quest will randomly trigger in Dominion's street tiles under the following conditions: no arcane storm; main quest is past Brax's section; over 5 days have passed since completing the 'Angry Harpies' quest; time is 17:00-21:00.</ul>"
+			+"<ul>Enforcers in the 'alleyway Enforcer encounters' will now confiscate illegal items, and arrest you if they find that you're carrying highly illegal items.</ul>"
+			
+			+"<li>Items:</li>"
+			+"<ul>Added sticker support to the 'rental mommy' and 'rental daddy' T-shirts.</ul>"
+			+"<ul>'Biojuice Canisters' and 'Glowing Mushrooms' are now tagged as restricted items.</ul>"
+			+"<ul>'Demon's Dagger' (no longer sold by Vicky) and all of the Enforcer weapons are now tagged as either illegal (Enforcers will confiscate them) or highly illegal (Enforcers will arrest you).</ul>"
+			+"<ul>All Enforcer clothing is now tagged as illegal (Enforcers will confiscate them).</ul>"
+			
+			+"<li>Other:</li>"
+			+"<ul>Slightly altered description of 'cynical' personality trait to differentiate it from 'selfish'.</ul>"
+			+"<ul>Items and weapons will now correctly display ItemTag descriptions in their tooltips.</ul>"
+			+"<ul>Roxy now buys weapons as well as items and clothing. Her buy modifier has been reduced from 0.4 to 0.3 (meaning she will now only give you 30% of an item's value).</ul>"
+			+"<ul>Sean now correctly wears an Enforcer patrol uniform instead of a dress uniform.</ul>"
+			
+			+"<li>Bugs:</li>"
+			+"<ul>Parsing fixes.</ul>"
+			+"<ul>Updated example links in xml modding files to point to the correct files.</ul>"
+			+"<ul>Fixed bug where you could get stuck in Brax's office after resolving the part of the main quest which involves him.</ul>"
+			+"<ul>Fixed issue with the cheat guns' 'mag dump' combat move being automatically removed after selecting it.</ul>"
+			+"<ul>Fixed descriptions of putting kitty panties on/off being inverted.</ul>"
+			+"<ul>Fixed bug where weapons could show incorrect image previews in the dye screen. (The 'Demon's Dagger' was suffering from this.)</ul>"
+		+"</list>"
+		
 		+ "<br/>"
 		
 		+ "<list>"
@@ -283,6 +395,8 @@ public class Main extends Application {
 		credits.add(new CreditsSlot("DethEagle666", "", 0, 0, 0, 0, Subspecies.DEMON));
 		credits.add(new CreditsSlot("Mystic Exarch", "", 0, 0, 0, 0, Subspecies.DEMON));
 		credits.add(new CreditsSlot("Lucifer", "", 0, 0, 0, 0, Subspecies.DEMON));
+		credits.add(new CreditsSlot("A(woo)CE", "", 0, 0, 0, 0, Subspecies.DEMON));
+		credits.add(new CreditsSlot("BL4Z3ST0RM", "", 0, 0, 0, 0, Subspecies.DEMON));
 		
 		
 		credits.add(new CreditsSlot("Adhana Konker", "", 0, 0, 3, 0));
@@ -768,6 +882,8 @@ public class Main extends Application {
 				Main.game.initNewGame(startingDialogueNode);
 
 				Main.game.endTurn(0);
+				
+				OptionsDialogue.startingNewGame = false;
 				//Main.mainController.processNewDialogue();
 			}
 		});

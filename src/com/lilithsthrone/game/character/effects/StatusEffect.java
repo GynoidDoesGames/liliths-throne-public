@@ -43,6 +43,7 @@ import com.lilithsthrone.game.character.npc.submission.Shadow;
 import com.lilithsthrone.game.character.npc.submission.Silence;
 import com.lilithsthrone.game.character.persona.SexualOrientation;
 import com.lilithsthrone.game.character.quests.QuestLine;
+import com.lilithsthrone.game.character.race.AbstractRace;
 import com.lilithsthrone.game.character.race.Race;
 import com.lilithsthrone.game.character.race.RaceStage;
 import com.lilithsthrone.game.character.race.Subspecies;
@@ -1420,7 +1421,9 @@ public class StatusEffect {
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
-					&& ((!target.isVulnerableToArcaneStorm() && !target.getLocationPlace().isStormImmune()) || !target.getGlobalLocationPlace().getPlaceType().equals(PlaceType.WORLD_MAP_DOMINION));
+					&& Main.game.isStarted()
+					&& ((!target.isVulnerableToArcaneStorm() && !(target.isElemental()?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune())
+							|| !target.getGlobalLocationPlace().getPlaceType().equals(PlaceType.WORLD_MAP_DOMINION));
 		}
 		@Override
 		public String getSVGString(GameCharacter owner) {
@@ -1486,8 +1489,9 @@ public class StatusEffect {
 		public boolean isConditionsMet(GameCharacter target) {
 			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
+					&& Main.game.isStarted()
 					&& target.isVulnerableToArcaneStorm()
-					&& !target.getLocationPlace().isStormImmune()
+					&& !(target.isElemental()?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune()
 					&& target.getGlobalLocationPlace().getPlaceType().equals(PlaceType.WORLD_MAP_DOMINION);
 		}
 		@Override
@@ -1554,9 +1558,10 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
-			return target.getLocationPlace().isStormImmune()
-					&& Main.game.getCurrentWeather()==Weather.MAGIC_STORM
+			return Main.game.getCurrentWeather()==Weather.MAGIC_STORM
 					&& Main.game.isInNewWorld()
+					&& Main.game.isStarted()
+					&& (target.isElemental()?((Elemental)target).getSummoner().getLocationPlace():target.getLocationPlace()).isStormImmune()
 					&& target.getGlobalLocationPlace().getPlaceType().equals(PlaceType.WORLD_MAP_DOMINION);
 		}
 		@Override
@@ -1894,7 +1899,7 @@ public class StatusEffect {
 				for (AbstractClothing c : target.getClothingCurrentlyEquipped()) {
 					if (c.isDirty()
 							&& Collections.disjoint(
-									c.getClothingType().getItemTags(c.getSlotEquippedTo()),
+									c.getItemTags(),
 									Util.newArrayListOfValues(ItemTag.PLUGS_ANUS, ItemTag.SEALS_ANUS, ItemTag.PLUGS_VAGINA, ItemTag.SEALS_VAGINA, ItemTag.PLUGS_NIPPLES, ItemTag.SEALS_NIPPLES))) {
 						return true;
 					}
@@ -1938,7 +1943,7 @@ public class StatusEffect {
 				for (AbstractClothing c : target.getClothingCurrentlyEquipped()) {
 					if (c.isDirty()
 							&& Collections.disjoint(
-									c.getClothingType().getItemTags(c.getSlotEquippedTo()),
+									c.getItemTags(),
 									Util.newArrayListOfValues(ItemTag.PLUGS_ANUS, ItemTag.SEALS_ANUS, ItemTag.PLUGS_VAGINA, ItemTag.SEALS_VAGINA, ItemTag.PLUGS_NIPPLES, ItemTag.SEALS_NIPPLES))) {
 						return true;
 					}
@@ -1962,13 +1967,12 @@ public class StatusEffect {
 			for(AbstractClothing clothing : new ArrayList<>(target.getClothingCurrentlyEquipped())) {
 				if(target.getDirtySlots().contains(clothing.getSlotEquippedTo())) {
 					InventorySlot slotEquippedTo = clothing.getSlotEquippedTo();
-					List<ItemTag> tags = clothing.getClothingType().getItemTags(slotEquippedTo);
+					Set<ItemTag> tags = clothing.getItemTags();
 					slotsToClean.add(slotEquippedTo);
 					
-					boolean seals =
-							tags.contains(ItemTag.SEALS_ANUS)
-							|| tags.contains(ItemTag.SEALS_VAGINA)
-							|| tags.contains(ItemTag.SEALS_NIPPLES);
+					boolean seals = tags.contains(ItemTag.SEALS_ANUS)
+										|| tags.contains(ItemTag.SEALS_VAGINA)
+										|| tags.contains(ItemTag.SEALS_NIPPLES);
 					
 					if(clothing.getSlotEquippedTo()==InventorySlot.ANUS && (tags.contains(ItemTag.SEALS_ANUS) || tags.contains(ItemTag.PLUGS_ANUS))
 							|| clothing.getSlotEquippedTo()==InventorySlot.VAGINA && (tags.contains(ItemTag.SEALS_VAGINA) || tags.contains(ItemTag.PLUGS_VAGINA))
@@ -1991,7 +1995,7 @@ public class StatusEffect {
 					}
 					
 				} else {
-					for(InventorySlot blockedSlot : clothing.getClothingType().getIncompatibleSlots(target, clothing.getSlotEquippedTo())) {
+					for(InventorySlot blockedSlot : clothing.getIncompatibleSlots(target, clothing.getSlotEquippedTo())) {
 						if(target.getDirtySlots().contains(blockedSlot)) {
 							slotsToClean.add(blockedSlot);
 							if(!clothing.isDirty()) {
@@ -2843,7 +2847,8 @@ public class StatusEffect {
 				long timeLeft = oneDayLater - now;
 				long hoursLeft = timeLeft / 60;
 				long minutesLeft = timeLeft % 60;
-				extraEffects.add("<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
+				AbstractRace fluidRace = addiction.getFluid().getRace();
+				extraEffects.add("<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
 						+ (timeLeft > 0
 								?" [style.colourGood("+hoursLeft+":"+String.format("%02d", minutesLeft)+")]"
 								:" [style.boldArcane(Withdrawal!)]"));
@@ -2908,8 +2913,9 @@ public class StatusEffect {
 						long timeLeft = twoDaysLater - now;
 						long hoursLeft = timeLeft / 60;
 						long minutesLeft = timeLeft % 60;
+						AbstractRace fluidRace = addiction.getFluid().getRace();
 						sb.append("<br/>"
-								+ "<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
+								+ "<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
 								+ " [style.boldArcane(worsens in)] "+hoursLeft+":"+String.format("%02d", minutesLeft));
 					}
 				}
@@ -2969,8 +2975,9 @@ public class StatusEffect {
 						long timeLeft = threeDaysLater - now;
 						long hoursLeft = timeLeft / 60;
 						long minutesLeft = timeLeft % 60;
+						AbstractRace fluidRace = addiction.getFluid().getRace();
 						sb.append("<br/>"
-								+ "<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
+								+ "<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
 								+ " [style.boldArcane(worsens in)] "+hoursLeft+":"+String.format("%02d", minutesLeft));
 					}
 				}
@@ -3030,8 +3037,9 @@ public class StatusEffect {
 						long timeLeft = fourDaysLater - now;
 						long hoursLeft = timeLeft / 60;
 						long minutesLeft = timeLeft % 60;
+						AbstractRace fluidRace = addiction.getFluid().getRace();
 						sb.append("<br/>"
-								+ "<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
+								+ "<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
 								+ " [style.boldArcane(worsens in)] "+hoursLeft+":"+String.format("%02d", minutesLeft));
 					}
 				}
@@ -3091,8 +3099,9 @@ public class StatusEffect {
 						long timeLeft = fiveDaysLater - now;
 						long hoursLeft = timeLeft / 60;
 						long minutesLeft = timeLeft % 60;
+						AbstractRace fluidRace = addiction.getFluid().getRace();
 						sb.append("<br/>"
-								+ "<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
+								+ "<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>: "
 								+ " [style.boldArcane(worsens in)] "+hoursLeft+":"+String.format("%02d", minutesLeft));
 					}
 				}
@@ -3148,8 +3157,9 @@ public class StatusEffect {
 					long now = Main.game.getMinutesPassed();
 					
 					if (fiveDaysLater <= now) {
+						AbstractRace fluidRace = addiction.getFluid().getRace();
 						sb.append("<br/>"
-								+ "<b style='color:"+addiction.getFluid().getRace().getColour().toWebHexString()+";'>"+Util.capitaliseSentence(addiction.getFluid().getRace().getName(true))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>.");
+								+ "<b style='color:"+fluidRace.getColour().toWebHexString()+";'>"+Util.capitaliseSentence(fluidRace.getName(fluidRace!=Race.DEMON))+" "+addiction.getFluid().getBaseType().getNames().get(0)+"</b>.");
 					}
 				}
 				

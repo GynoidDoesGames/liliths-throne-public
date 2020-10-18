@@ -122,6 +122,7 @@ public class HarpyNestsDialogue {
 									public void effects() {
 										Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().setQuestProgress(QuestLine.SIDE_HARPY_PACIFICATION, Quest.SIDE_UTIL_COMPLETE));
 										Main.game.getTextEndStringBuilder().append(Main.game.getPlayer().incrementMoney(5000));
+										Main.game.getDialogueFlags().setSavedLong("angry_harpies_completed", Main.game.getMinutesPassed());
 									}
 								});
 						
@@ -252,7 +253,7 @@ public class HarpyNestsDialogue {
 			StringBuilder sb = new StringBuilder();
 			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY"));
 			
-			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY_CORE", new ArrayList<GameCharacter>(Main.game.getNonCompanionCharactersPresent())));
+			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY_CORE", new ArrayList<>(Main.game.getNonCompanionCharactersPresent())));
 			
 			for(GameCharacter npc : Main.game.getNonCompanionCharactersPresent()) {
 				sb.append(((NPC) npc).getPresentInTileDescription(false));
@@ -308,7 +309,7 @@ public class HarpyNestsDialogue {
 			StringBuilder sb = new StringBuilder();
 			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY_BRIDGE"));
 			
-			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY_CORE", new ArrayList<GameCharacter>(Main.game.getNonCompanionCharactersPresent())));
+			sb.append(UtilText.parseFromXMLFile("places/dominion/harpyNests/generic", "WALKWAY_CORE", new ArrayList<>(Main.game.getNonCompanionCharactersPresent())));
 			
 			for(GameCharacter npc : Main.game.getNonCompanionCharactersPresent()) {
 				sb.append(((NPC) npc).getPresentInTileDescription(false));

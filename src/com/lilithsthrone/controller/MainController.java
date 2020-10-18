@@ -265,7 +265,7 @@ public class MainController implements Initializable {
 	}
 	
 	public void openPhone(DialogueNode toDialogue) {
-		if(isPhoneDisabled() && toDialogue!=PositioningMenu.POSITIONING_MENU) {
+		if(isPhoneDisabled() && toDialogue!=PositioningMenu.POSITIONING_MENU && Main.game.getCurrentDialogueNode()!=PositioningMenu.POSITIONING_MENU) {
 			return;
 		}
 		
@@ -489,22 +489,7 @@ public class MainController implements Initializable {
 						checkLastKeys();
 						
 						if(event.getCode()==KeyCode.END && Main.DEBUG){
-//							for(AbstractClothingType ct : ClothingType.getAllClothing()) {
-//								if(ct.isPatternAvailable()) {
-//									Main.game.getPlayerCell().getInventory().addClothing(Main.game.getItemGeneration().generateClothing(ct));
-//								}
-//							}
-//							for(int i=0; i<20; i++) {
-//								NPC n = new DominionExpressCentaur();
-//								n.setLocation(Main.game.getPlayer(), false);
-//								try {
-//									Main.game.addNPC(n, false);
-//								} catch (Exception e) {
-//									e.printStackTrace();
-//								}
-//							}
-//							Main.game.getPlayer().getClothingInSlot(InventorySlot.NECK).setColour(0, PresetColour.CLOTHING_GOLD);
-							System.out.println(Main.game.getPlayer().getLocation());
+							System.out.println(Main.sex.isSexStarted());
 						}
 						 
 

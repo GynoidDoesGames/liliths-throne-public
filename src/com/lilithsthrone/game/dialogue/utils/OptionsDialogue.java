@@ -74,6 +74,7 @@ public class OptionsDialogue {
 	public static ContentOptionsPage contentOptionsPage = ContentOptionsPage.MISC;
 
 	private static boolean confirmNewGame = false;
+	public static boolean startingNewGame = false;
 	
 	public static final DialogueNode MENU = new DialogueNode("Menu", "Menu", true) {
 		
@@ -115,7 +116,6 @@ public class OptionsDialogue {
 		
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			
 			 if (index == 1) {
 				 if(confirmNewGame || !Main.game.isStarted()) {
 					return new ResponseEffectsOnly(
@@ -128,19 +128,23 @@ public class OptionsDialogue {
 									:"")){
 						@Override
 						public void effects() {
-							//Fixes a bug where inventory would stay on screen
-							if (Main.game.isStarted()) {
-								Main.game.setInCombat(false);
-								Main.game.setInSex(false);
+							if(!startingNewGame) {
+								startingNewGame = true;
+								
+								//Fixes a bug where inventory would stay on screen
+								if (Main.game.isStarted()) {
+									Main.game.setInCombat(false);
+									Main.game.setInSex(false);
+								}
+								
+								Main.mainController.setAttributePanelContent("");
+								Main.mainController.setRightPanelContent("");
+								Main.mainController.setButtonsLeftContent("");
+								Main.mainController.setButtonsRightContent("");
+								Main.game.setRenderMap(false);
+								Main.startNewGame(CharacterCreation.CHARACTER_CREATION_START);
+								confirmNewGame = false;
 							}
-							
-							Main.mainController.setAttributePanelContent("");
-							Main.mainController.setRightPanelContent("");
-							Main.mainController.setButtonsLeftContent("");
-							Main.mainController.setButtonsRightContent("");
-							Main.game.setRenderMap(false);
-							Main.startNewGame(CharacterCreation.CHARACTER_CREATION_START);
-							confirmNewGame = false;
 						}
 					};
 					
@@ -2756,6 +2760,7 @@ public class OptionsDialogue {
 
 			UtilText.nodeContentSB.append("<br/>"
 					+ "Contributors:</br>" // In alphabetical order:
+					+ "<b style='color:#21bfc5;'>AceXP</b></br>"
 					+ "<b style='color:#21bfc5;'>DJ Addi</b></br>"
 					+ "<b style='color:#21bfc5;'>DSG</b></br>"
 					+ "<b style='color:#21bfc5;'>Irbynx</b></br>"

@@ -25,6 +25,7 @@ import com.lilithsthrone.game.dialogue.places.dominion.DominionPlaces;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.responses.ResponseSex;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
+import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.sex.managers.dominion.SMBraxDoggy;
 import com.lilithsthrone.game.sex.managers.universal.SMStanding;
@@ -59,9 +60,18 @@ public class EnforcerHQDialogue {
 		} else {
 			Main.game.getNpc(Brax.class).setObedience(-80);
 		}
-		Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_uniques_enfdjacket_brax", PresetColour.CLOTHING_BLACK, false), false);
+		
+		AbstractClothing jacket = Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdjacket", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_BLUE, null, false);
+		jacket.setSticker("collar", "tab_ip");
+		jacket.setSticker("name", "name_brax");
+		jacket.setSticker("ribbon", "ribbon_brax");
+		Main.game.getNpc(Brax.class).addClothing(jacket, false);
+		
 		Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdbelt", PresetColour.CLOTHING_DESATURATED_BROWN, false), false);
-		Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false), false);
+
+		AbstractClothing hat = Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false);
+		hat.setSticker("badge", "badge_dominion");
+		Main.game.getNpc(Brax.class).addClothing(hat, false);
 		
 		Main.game.getNpc(Brax.class).setLocation(WorldType.SLAVER_ALLEY, PlaceType.SLAVER_ALLEY_SLAVERY_ADMINISTRATION, true);
 	}
@@ -352,9 +362,13 @@ public class EnforcerHQDialogue {
 			sb.append(UtilText.parseFromXMLFile("places/dominion/enforcerHQ/generic", "RECEPTION_DESK"));
 			
 			if(Main.game.getPlayer().getQuest(QuestLine.SIDE_WES)==Quest.WES_3_WES) {
+				long days = 7-((Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID))/(60*24));
+				UtilText.addSpecialParsingString(Util.intToString((int) days)+" day"+(days==1?"":"s"), true);
 				sb.append(UtilText.parseFromXMLFile("characters/dominion/wes", "RECEPTION_DESK_WES"));
 				
 			} else if(Main.game.getPlayer().getQuest(QuestLine.SIDE_WES)==Quest.WES_3_ELLE) {
+				long days = 7-((Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID))/(60*24));
+				UtilText.addSpecialParsingString(Util.intToString((int) days)+" day"+(days==1?"":"s"), true);
 				sb.append(UtilText.parseFromXMLFile("characters/dominion/wes", "RECEPTION_DESK_ELLE"));
 			}
 			
@@ -610,9 +624,9 @@ public class EnforcerHQDialogue {
 				
 				if(Main.game.getPlayer().getQuest(QuestLine.SIDE_WES)==Quest.WES_3_WES) {
 					if(Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID)<60*24*7) {
-						long days = (((Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID)+(60*24*7))-Main.game.getMinutesPassed())/(60*24)) + 1;
+						long days = 7-((Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID))/(60*24));
 						return new Response("Wes",
-								"It hasn't yet a week since you anonymously handed in the arcane recorder, so you shouldn't ask to see Wes just yet..."
+								"It hasn't yet been a week since you anonymously handed in the arcane recorder, so you shouldn't ask to see Wes just yet..."
 									+ "<br/>You need to wait another [style.italicsMinorBad("+days+" day"+(days==1?"":"s")+")]!",
 								null);
 						
@@ -623,10 +637,10 @@ public class EnforcerHQDialogue {
 					}
 					
 				} else if(Main.game.getPlayer().getQuest(QuestLine.SIDE_WES)==Quest.WES_3_ELLE) {
-					if(Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID)<60*60*24*7) {
-						long days = (((Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID)+(60*24*7))-Main.game.getMinutesPassed())/(60*24)) + 1;
+					if(Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID)<60*24*7) {
+						long days = 7-((Main.game.getMinutesPassed()-Main.game.getDialogueFlags().getSavedLong(WesQuest.QUEST_COMPLETION_MINUTES_TIMER_ID))/(60*24));
 						return new Response("Elle",
-								"It hasn't yet a week since you anonymously handed in the arcane recorder, so you shouldn't ask to see Elle just yet..."
+								"It hasn't yet been a week since you anonymously handed in the arcane recorder, so you shouldn't ask to see Elle just yet..."
 									+ "<br/>You need to wait another [style.italicsMinorBad("+days+" day"+(days==1?"":"s")+")]!",
 								null);
 						
@@ -1184,10 +1198,10 @@ public class EnforcerHQDialogue {
 				
 			} else {
 				if(index==1) {
-					return new Response("Approach",
+					return new Response("Ring bell",
 							Main.game.getPlayer().hasQuestInLine(QuestLine.SIDE_WES, Quest.WES_3_ELLE)
-								?"[pc.Step] up to the requisitions desk and get Elle's attention."
-								:"[pc.Step] up to the requisitions desk and get Wes's attention.",
+								?"Ring the bell on the requisitions desk to get Elle's attention."
+								:"Ring the bell on the requisitions desk to get Wes's attention.",
 							WesQuest.REQUISITIONS_INTERACTION);
 				}
 			}

@@ -164,6 +164,7 @@ import com.lilithsthrone.game.dialogue.utils.DebugDialogue;
 import com.lilithsthrone.game.dialogue.utils.InventoryDialogue;
 import com.lilithsthrone.game.dialogue.utils.MapTravelType;
 import com.lilithsthrone.game.dialogue.utils.MiscDialogue;
+import com.lilithsthrone.game.dialogue.utils.OptionsDialogue;
 import com.lilithsthrone.game.dialogue.utils.PhoneDialogue;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.CharacterInventory;
@@ -1325,9 +1326,18 @@ public class Game implements XMLSaving {
 							Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_ssldshirt", PresetColour.CLOTHING_BLUE, false), false);
 							Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("innoxia_neck_tie", PresetColour.CLOTHING_BLACK, false), false);
 						}
-						Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_uniques_enfdjacket_brax", PresetColour.CLOTHING_BLACK, false), false);
+						
+						AbstractClothing jacket = Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdjacket", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_BLUE, null, false);
+						jacket.setSticker("collar", "tab_ip");
+						jacket.setSticker("name", "name_brax");
+						jacket.setSticker("ribbon", "ribbon_brax");
+						Main.game.getNpc(Brax.class).addClothing(jacket, false);
+						
 						Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdbelt", PresetColour.CLOTHING_DESATURATED_BROWN, false), false);
-						Main.game.getNpc(Brax.class).addClothing(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false), false);
+						
+						AbstractClothing hat = Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false);
+						hat.setSticker("badge", "badge_dominion");
+						Main.game.getNpc(Brax.class).addClothing(hat, false);
 					}
 				}
 
@@ -2345,6 +2355,9 @@ public class Game implements XMLSaving {
 	private int positionAnchor = 0;
 	private String dialogueTitle = "";
 	public void setContent(int index) {
+		if(OptionsDialogue.startingNewGame) {
+			return;
+		}
 		informationTooltips = new HashMap<>();
 		
 		Response response = currentDialogueNode.getResponse(responseTab, index);

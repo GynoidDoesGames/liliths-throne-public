@@ -76,6 +76,7 @@ import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.RatWarrensDi
 import com.lilithsthrone.game.dialogue.places.submission.ratWarrens.VengarCaptiveDialogue;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.inventory.CharacterInventory;
+import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
@@ -325,12 +326,8 @@ public class PlaceType {
 			"dominion/enforcerHQIcon",
 			PresetColour.BASE_BLUE,
 			EnforcerHQDialogue.EXTERIOR,
-			Encounter.DOMINION_STREET,
+			null,
 			"in the streets of Dominion") {
-		@Override
-		public boolean isDangerous() {
-			return Main.game.getCurrentWeather() == Weather.MAGIC_STORM;
-		}
 		@Override
 		public List<Population> getPopulation() {
 			return DOMINION_STREET.getPopulation();
@@ -945,9 +942,17 @@ public class PlaceType {
 			"in his office") {
 		@Override
 		public void applyInventoryInit(CharacterInventory inventory) {
-			inventory.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_uniques_enfdjacket_brax", PresetColour.CLOTHING_BLACK, false));
+			AbstractClothing jacket = Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdjacket", PresetColour.CLOTHING_BLACK, PresetColour.CLOTHING_BLUE, null, false);
+			jacket.setSticker("collar", "tab_ip");
+			jacket.setSticker("name", "name_brax");
+			jacket.setSticker("ribbon", "ribbon_brax");
+			inventory.addClothing(jacket);
+			
 			inventory.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_servequipset_enfdbelt", PresetColour.CLOTHING_DESATURATED_BROWN, false));
-			inventory.addClothing(Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false));
+			
+			AbstractClothing hat = Main.game.getItemGen().generateClothing("dsg_eep_ptrlequipset_pcap", PresetColour.CLOTHING_BLACK, false);
+			hat.setSticker("badge", "badge_dominion");
+			inventory.addClothing(hat);
 		}
 		@Override
 		public boolean isItemsDisappear() {
@@ -1935,7 +1940,8 @@ public class PlaceType {
 			}
 			return pop;
 		}
-	}.initItemsPersistInTile();
+	}.initItemsPersistInTile()
+	.initWeatherImmune();
 	
 	public static final AbstractPlaceType LILAYA_HOME_SPA = new AbstractPlaceType(
 			"Spa pools",
@@ -1945,7 +1951,8 @@ public class PlaceType {
 			LilayaSpa.SPA_CORE,
 			null,
 			"in Lilaya's spa"
-			).initItemsPersistInTile();
+			).initItemsPersistInTile()
+			.initWeatherImmune();
 	
 	public static final AbstractPlaceType LILAYA_HOME_SPA_POOL = new AbstractPlaceType(
 			"Swimming pool",
@@ -3956,8 +3963,19 @@ public class PlaceType {
 			BatCaverns.CAVERN_LIGHT,
 			Encounter.BAT_CAVERN,
 			"in the Bat Caverns"
-			).initDangerous()
-			.initWeatherImmune();
+			) {
+		@Override
+		public List<Population> getPopulation() {
+			if(Main.game.getCharactersPresent().contains(Main.game.getNpc(Elle.class))) {
+				return Util.newArrayListOfValues(new Population(true, PopulationType.GANG_MEMBER, PopulationDensity.SEVERAL, Util.newHashMapOfValues(
+						new Value<>(Subspecies.RAT_MORPH, SubspeciesSpawnRarity.FOUR_COMMON),
+						new Value<>(Subspecies.ALLIGATOR_MORPH, SubspeciesSpawnRarity.FOUR_COMMON),
+						new Value<>(Subspecies.DOG_MORPH, SubspeciesSpawnRarity.FOUR_COMMON))));
+			}
+			return super.getPopulation();
+		}
+	}.initDangerous()
+	.initWeatherImmune();
 	
 	public static final AbstractPlaceType BAT_CAVERN_RIVER = new AbstractPlaceType(
 			"Underground River",

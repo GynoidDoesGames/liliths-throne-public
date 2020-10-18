@@ -54,6 +54,7 @@ import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
 import com.lilithsthrone.game.inventory.clothing.DisplacementType;
 import com.lilithsthrone.game.inventory.item.AbstractItem;
 import com.lilithsthrone.game.inventory.item.AbstractItemType;
+import com.lilithsthrone.game.inventory.item.ItemType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeapon;
 import com.lilithsthrone.game.occupantManagement.MilkingRoom;
 import com.lilithsthrone.game.occupantManagement.slave.SlaveJob;
@@ -727,7 +728,7 @@ public class Sex {
 				clothingToStrip.addAll(character.getClothingCurrentlyEquipped());
 				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
 				for(AbstractClothing c : clothingToStrip) {
-					for(DisplacementType dt : c.getClothingType().getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
+					for(DisplacementType dt : c.getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
 						character.isAbleToBeDisplaced(c, dt, true, true, character);
 					}
 				}
@@ -752,7 +753,7 @@ public class Sex {
 				clothingToStrip.removeIf(c -> c.getSlotEquippedTo().isJewellery() || c.isMilkingEquipment());
 				for(AbstractClothing c : clothingToStrip) {
 					if(Main.sex.getInitialSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), c)) {
-						for(DisplacementType dt : c.getClothingType().getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
+						for(DisplacementType dt : c.getBlockedPartsKeysAsListWithoutNONE(character, c.getSlotEquippedTo())) {
 							character.isAbleToBeDisplaced(c, dt, true, true, character);
 						}
 					}
@@ -848,7 +849,7 @@ public class Sex {
 			
 			for (Entry<InventorySlot, Map<AbstractClothing, List<DisplacementType>>> entry2 : entry.getValue().entrySet()) {
 				for (AbstractClothing c : entry2.getValue().keySet()) {
-					if(!c.getClothingType().isDiscardedOnUnequip(entry2.getKey()) || c.isMilkingEquipment()) { // Special case for pumps, which are normally discarded on unequip
+					if(!c.isDiscardedOnUnequip(entry2.getKey()) || c.isMilkingEquipment()) { // Special case for pumps, which are normally discarded on unequip
 						AbstractClothing dirtyClone = new AbstractClothing(c) {};
 						dirtyClone.setDirty(null, true);
 						dirtyClone.setSlotEquippedTo(null);
@@ -1235,8 +1236,14 @@ public class Sex {
 				endSexSB.append(getEndSexStretchingDescription(participant));
 				
 				if(getHeavyLipstickUsedCharacter().contains(participant)) {
-					participant.removeHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK);
-					endSexSB.append("<p style='text-align:center'><i>Your [style.italicsPinkDeep(heavy layer)] of lipstick has [style.italicsBad(worn off)]!</i></p>");
+					if(participant.hasItemType(ItemType.MAKEUP_SET)) {
+						endSexSB.append("<p style='text-align:center'><i>Your [style.italicsPinkDeep(heavy layer)] of lipstick has worn off, but you have "
+								+ ItemType.MAKEUP_SET.getName(true, false)
+								+ ", so you take a few moments to [style.italicsGood(reapply)] your [style.italicsPinkDeep(heavy layer)] of lipstick.</i></p>");
+					} else {
+						participant.removeHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK);
+						endSexSB.append("<p style='text-align:center'><i>Your [style.italicsPinkDeep(heavy layer)] of lipstick has [style.italicsBad(worn off)]!</i></p>");
+					}
 				}
 				
 				if((participant.getArousal() > ArousalLevel.THREE_HEATED.getMaximumValue() || Main.sex.getNumberOfDeniedOrgasms(participant)>0) && getNumberOfOrgasms(participant) == 0) {
@@ -1342,8 +1349,14 @@ public class Sex {
 				endSexSB.append(getEndSexStretchingDescription(participant));
 
 				if(getHeavyLipstickUsedCharacter().contains(participant)) {
-					participant.removeHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK);
-					endSexSB.append("<p style='text-align:center'><i>[npc.NamePos] [style.italicsPinkDeep(heavy layer)] of lipstick has [style.italicsBad(worn off)]!</i></p>");
+					if(participant.hasItemType(ItemType.MAKEUP_SET)) {
+						endSexSB.append("<p style='text-align:center'><i>[npc.NamePos] [style.italicsPinkDeep(heavy layer)] of lipstick has worn off, but [npc.she] [npc.has] "
+								+ ItemType.MAKEUP_SET.getName(true, false)
+								+ ", so [npc.she] [npc.verb(take)] a few moments to [style.italicsGood(reapply)] [npc.her] [style.italicsPinkDeep(heavy layer)] of lipstick.</i></p>");
+					} else {
+						participant.removeHeavyMakeup(BodyCoveringType.MAKEUP_LIPSTICK);
+						endSexSB.append("<p style='text-align:center'><i>[npc.NamePos] [style.italicsPinkDeep(heavy layer)] of lipstick has [style.italicsBad(worn off)]!</i></p>");
+					}
 				}
 				
 				// Extra effects:
@@ -2695,14 +2708,14 @@ public class Sex {
 			Set<GameCharacter> levelDrains = new HashSet<>();
 			if(!Main.sex.getCharacterPerformingAction().isImmuneToLevelDrain()) {
 				if(Main.sex.isDom(Main.sex.getCharacterPerformingAction())) {
-					for(GameCharacter sub : Main.sex.getSubmissiveParticipants(false).keySet()) {
+					for(GameCharacter sub : Main.sex.getSubmissiveParticipants(true).keySet()) {
 						if(sub.hasTrait(Perk.ORGASMIC_LEVEL_DRAIN, true) && ((!sub.isPlayer() && sub.isWantingToLevelDrain(Main.sex.getCharacterPerformingAction())) || Main.sex.playerLevelDrain)) {
 							levelDrains.add(sub);
 						}
 					}
 					
 				} else {
-					for(GameCharacter dom : Main.sex.getDominantParticipants(false).keySet()) {
+					for(GameCharacter dom : Main.sex.getDominantParticipants(true).keySet()) {
 						if(dom.hasTrait(Perk.ORGASMIC_LEVEL_DRAIN, true) && ((!dom.isPlayer() && dom.isWantingToLevelDrain(Main.sex.getCharacterPerformingAction())) || Main.sex.playerLevelDrain)) {
 							levelDrains.add(dom);
 						}
@@ -5545,7 +5558,7 @@ public class Sex {
 	
 	public boolean isDoubleFootJob(GameCharacter charactersFeet) {
 		for(AbstractClothing clothing : charactersFeet.getClothingCurrentlyEquipped()) {
-			if(clothing.getClothingType().getItemTags(clothing.getSlotEquippedTo()).contains(ItemTag.SPREADS_FEET)) {
+			if(clothing.getItemTags().contains(ItemTag.SPREADS_FEET)) {
 				return false;
 			}
 		}
